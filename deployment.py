@@ -1,8 +1,8 @@
 ## Import
-import streamlit
-import pandas
-import numpy
-import tensorflow
+import streamlit as st
+import pandas as pd
+import numpy as np
+import tensorflow as tf
 import requests
 from streamlit_gsheets import GSheetsConnection
 import streamlit_analytics
