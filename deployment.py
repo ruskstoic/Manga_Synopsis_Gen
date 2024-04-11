@@ -27,4 +27,5 @@ st.title('Shall we generate a never before seen manga synopsis?')
 
 
 ## Streamlit Tracker End
-streamlit_analytics.stop_tracking(unsafe_password='test123')
+unsafe_password = st.secrets['ST_ANALYTICS_PW']
+streamlit_analytics.stop_tracking(unsafe_password)
