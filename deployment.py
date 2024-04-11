@@ -22,7 +22,7 @@ from google.oauth2 import service_account
 streamlit_analytics.start_tracking()
 
 ## Streamlit Interface
-st.title('Shall we generate a never before seen manga synopsis?')
+st.title('Shall We Generate A Never-Before-Seen Manga Synopsis?')
 
 
 
