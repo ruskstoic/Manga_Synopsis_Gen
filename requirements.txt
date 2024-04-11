@@ -1,6 +1,7 @@
 streamlit
 pandas
 numpy
+uuid
 tensorflow
 requests
 st-gsheets-connection
