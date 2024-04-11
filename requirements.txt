@@ -1,1 +1,12 @@
-
+streamlit
+pandas
+numpy
+tensorflow
+requests
+st-gsheets-connection
+streamlit-analytics
+streamlit-cookies-manager
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client
