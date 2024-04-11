@@ -2,6 +2,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import uuid
 import tensorflow as tf
 import requests
 from streamlit_gsheets import GSheetsConnection
@@ -20,12 +21,21 @@ from google.oauth2 import service_account
 
 ## Streamlit Tracker Start
 streamlit_analytics.start_tracking()
+unsafe_password = st.secrets['ST_ANALYTICS_PW'] 
+
+## Cookies Manager
+cookies = EncryptedCookieManager(prefix='manga-synopsis-gen',
+                                 password=unsafe_password)
+if not cookies.ready():
+  st.stop()
+cookies_user_id = cookies.get('user_id')
+if cookies_user_id is None:
+  cookkies_user_id = str(uuid.uuid4())
+  cookies['user_id'] = cookies_user_id
+st.write(cookies_user_id)
 
 ## Streamlit Interface
 st.title('Shall We Generate A Never-Before-Seen Manga Synopsis?')
 
-
-
 ## Streamlit Tracker End
-unsafe_password = st.secrets['ST_ANALYTICS_PW']
 streamlit_analytics.stop_tracking(unsafe_password)
