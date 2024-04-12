@@ -27,18 +27,24 @@ unsafe_password = st.secrets['ST_ANALYTICS_PW']
 
 ## Cookies Manager
 cookies = EncryptedCookieManager(prefix='manga-synopsis-gen/',
-                                 password=unsafe_password
-                                )
-st.write(cookies)
+                                 password=unsafe_password)
 
 if not cookies.ready():
   st.stop()
 cookies_user_id = cookies.get('user_id')
-st.write("cookies_user_id:", cookies_user_id) 
 if cookies_user_id is None:
   cookies_user_id = str(uuid.uuid4())
   cookies['user_id'] = cookies_user_id
-st.write(cookies_user_id)
+
+## Functions
+def get_or_create_tab_ID():
+  if tab_id not in st.session_state:
+    tab_id = str(uuid.uuid4())
+  return tab_id
+
+get_or_create_tab_ID()
+st.write(st.session_state)
+st.session_state
 
 ## Streamlit Interface
 st.title('Shall We Generate A Never-Before-Seen Manga Synopsis?')
