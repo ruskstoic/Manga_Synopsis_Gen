@@ -26,6 +26,8 @@ unsafe_password = st.secrets['ST_ANALYTICS_PW']
 ## Cookies Manager
 cookies = EncryptedCookieManager(prefix='manga-synopsis-gen/',
                                  password=unsafe_password)
+st.write(cookies)
+
 if not cookies.ready():
   st.stop()
 cookies_user_id = cookies.get('user_id')
