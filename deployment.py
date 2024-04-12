@@ -26,7 +26,7 @@ unsafe_password = st.secrets['ST_ANALYTICS_PW']
 
 ## Cookies Manager
 cookies = EncryptedCookieManager(prefix='manga-synopsis-gen/',
-                                 password=os.environ.get("STREAMLIT_COOKIES_MANAGER_PASSWORD", "My secret password")
+                                 password=unsafe_password
                                 )
 st.write(cookies)
 
