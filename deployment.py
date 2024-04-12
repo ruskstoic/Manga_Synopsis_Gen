@@ -36,7 +36,7 @@ if not cookies.ready():
 cookies_user_id = cookies.get('user_id')
 st.write("cookies_user_id:", cookies_user_id) 
 if cookies_user_id is None:
-  cookkies_user_id = str(uuid.uuid4())
+  cookies_user_id = str(uuid.uuid4())
   cookies['user_id'] = cookies_user_id
 st.write(cookies_user_id)
 
