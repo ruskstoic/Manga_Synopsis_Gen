@@ -4,6 +4,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import uuid
+import base64
+from streamlit_cookies_manager import EncryptedCookieManager
 import tensorflow as tf
 import requests
 from streamlit_gsheets import GSheetsConnection
@@ -11,7 +13,6 @@ import streamlit_analytics
 from streamlit.runtime import get_instance
 from streamlit.runtime.scriptrunner import get_script_run_ctx
 from streamlit.runtime.scriptrunner.script_run_context import get_script_run_ctx
-from streamlit_cookies_manager import EncryptedCookieManager
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
