@@ -42,11 +42,6 @@ def get_or_create_tab_ID():
     st.session_state.tab_id = str(uuid.uuid4())
   return st.session_state.tab_id
 
-hi = get_or_create_tab_ID()
-st.write(hi)
-st.write(st.session_state)
-st.session_state
-
 ## Streamlit Interface
 st.title('Shall We Generate A Never-Before-Seen Manga Synopsis?')
 
