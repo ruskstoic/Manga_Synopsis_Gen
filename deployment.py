@@ -29,6 +29,7 @@ cookies = EncryptedCookieManager(prefix='manga-synopsis-gen',
 if not cookies.ready():
   st.stop()
 cookies_user_id = cookies.get('user_id')
+print("cookies_user_id:", cookies_user_id) 
 if cookies_user_id is None:
   cookkies_user_id = str(uuid.uuid4())
   cookies['user_id'] = cookies_user_id
