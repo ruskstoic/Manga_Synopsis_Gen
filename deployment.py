@@ -38,11 +38,12 @@ if cookies_user_id is None:
 
 ## Functions
 def get_or_create_tab_ID():
-  if tab_id not in st.session_state:
-    tab_id = str(uuid.uuid4())
-  return tab_id
+  if 'tab_id' not in st.session_state:
+    st.session_state.tab_id = str(uuid.uuid4())
+  return st.session_state.tab_id
 
-get_or_create_tab_ID()
+hi = get_or_create_tab_ID()
+st.write(hi)
 st.write(st.session_state)
 st.session_state
 
