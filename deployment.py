@@ -24,7 +24,7 @@ streamlit_analytics.start_tracking()
 unsafe_password = st.secrets['ST_ANALYTICS_PW'] 
 
 ## Cookies Manager
-cookies = EncryptedCookieManager(prefix='manga-synopsis-gen',
+cookies = EncryptedCookieManager(prefix='manga-synopsis-gen/',
                                  password=unsafe_password)
 if not cookies.ready():
   st.stop()
