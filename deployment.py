@@ -1,4 +1,5 @@
 ## Import
+import os
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -25,7 +26,8 @@ unsafe_password = st.secrets['ST_ANALYTICS_PW']
 
 ## Cookies Manager
 cookies = EncryptedCookieManager(prefix='manga-synopsis-gen/',
-                                 password=unsafe_password)
+                                 password=os.environ.get("STREAMLIT_COOKIES_MANAGER_PASSWORD", "My secret password")
+                                )
 st.write(cookies)
 
 if not cookies.ready():
