@@ -48,7 +48,7 @@ def log_user_info():
   user_info = {'Name': user_name,
                'User_ID': user_id,
                'Datetime_Entered': formatted_datetime,
-               'Tab_ID':, tab_id,
+               'Tab_ID': tab_id,
                'Seed_Text': seed_text,
                'Gen_Text': gen_text
               }
