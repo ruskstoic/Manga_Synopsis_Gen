@@ -70,7 +70,7 @@ st.title('Shall We Generate A Never-Before-Seen Manga Synopsis?')
 user_name = st.text_input('Hello! What is your name?')
 
 ## Start User Pipeline
-if user_name:
+# if user_name:
 
 ## Streamlit Tracker End
 streamlit_analytics.stop_tracking(unsafe_password)
