@@ -96,7 +96,7 @@ if user_name:
   st.write(seed_text, temperature, num_gen_words)
 
   ## User has input seed text and click generate button
-  if seed_text is not None:
+  if seed_text:
     if st.button('Generate'):
       
       #Get Model from Google Drive
