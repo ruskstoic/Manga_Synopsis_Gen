@@ -83,7 +83,7 @@ if user_name:
   datetime_format = '%Y-%m-%d %H:%M:%S'
   converted_timezone = pytz.timezone('Asia/Singapore')
   datetime_entered = datetime.now(converted_timezone)
-  formatted_datetime = datetime_format.strftime(datetime_format)
+  formatted_datetime = datetime_entered.strftime(datetime_format)
 
   # User Input Seed Text, Temperature, Num_Gen_Words
   seed_text = st.text_area('Input some text here and we will generate a synopsis from this!')
