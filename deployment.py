@@ -86,7 +86,7 @@ if user_name:
   formatted_datetime = datetime_entered.strftime(datetime_format)
 
   # User Input Seed Text, Temperature, Num_Gen_Words
-  seed_text = st.text_area('Input some text here and we will generate a synopsis from this!')
+  seed_text = st.text_area('Input some text here and we will generate a synopsis from this!/n/n')
   temperature = st.slider('Choose the Temperature You Would Like (The higher the temperature, the more random the generated words)', 0.3, 1.0)
   num_gen_words = st.slider('Choose the Number of Generated Words You Would Like', 20, 60)
 
