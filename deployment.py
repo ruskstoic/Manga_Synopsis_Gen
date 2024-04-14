@@ -20,6 +20,8 @@ from googleapiclient.http import MediaFileUpload
 from googleapiclient.http import MediaIoBaseDownload
 from google.auth.credentials import Credentials
 from google.oauth2 import service_account
+from datetime import datetime, timedelta
+import pytz
 
 ## Streamlit Tracker Start
 streamlit_analytics.start_tracking()
@@ -70,7 +72,25 @@ st.title('Shall We Generate A Never-Before-Seen Manga Synopsis?')
 user_name = st.text_input('Hello! What is your name?')
 
 ## Start User Pipeline
-# if user_name:
+if user_name:
+  st.write(f'Hello {user_name}'}
+
+  # Create User ID and Tab ID
+  user_id = cookies['user_id']
+  tab_id = get_or_create_tab_ID()
+
+  # Create Datetime Entered
+  datetime_format = '%Y-%m-%d %H:%M:%S'
+  converted_timezone = pytz.timezone('Asia/Singapore')
+  datetime_entered = datetime.now(converted_timezone)
+  formatted_datetime = datetime_format.strftime(datetime_format)
+
+  # User Input Seed Text, Temperature, Num_Gen_Words
+  seed_text = st.text_area('Input some text here and we will generate a synopsis from this!')
+  temperature = st.slider('Choose the Temperature You Would Like (The higher the temperature, the more random the generated words)', 0.3, 1.0)
+  num_gen_words = st.slider('Choose the Number of Generated Words You Would Like', 20, 60)
+
+  st.write(seed_text, temperature, num_gen_words)
 
 ## Streamlit Tracker End
 streamlit_analytics.stop_tracking(unsafe_password)
