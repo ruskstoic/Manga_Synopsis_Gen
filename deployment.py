@@ -73,7 +73,7 @@ user_name = st.text_input('Hello! What is your name?')
 
 ## Start User Pipeline
 if user_name:
-  st.write(f'Hello {user_name}'}
+  st.write(f'Hello {user_name}')
 
   # Create User ID and Tab ID
   user_id = cookies['user_id']
