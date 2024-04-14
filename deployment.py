@@ -165,7 +165,7 @@ if user_name:
 
     ## Save Data to Google Sheet
     log_entry_df = log_user_info(user_name=user_name, user_id=user_id, formatted_datetime=formatted_datetime, tab_id=tab_id, seed_text=seed_text, gen_text=gen_text, temperature=temperature,
-                                 num_gen_words=num_gen_words):
+                                 num_gen_words=num_gen_words)
     conn = st.connection('gsheets', type=GSheetsConnection)
     existing_data = conn.read(worksheet='Sheet2', usecols=[0,1,2,3,4,5,6,7], end='A')
     existing_df = pd.DataFrame(existing_data, columns=['Name', 'User_ID', 'Datetime_Entered', 'Tab_ID', 'Seed_Text', 'Gen_Text', 'Temp', 'Num_Gen_Words'])
