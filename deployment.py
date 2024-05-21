@@ -26,7 +26,7 @@ import tensorflow as tf
 import pickle
 import io
 import tempfile
-import request
+import requests
 
 st.write(tf.__version__)
 ## Streamlit Tracker Start
