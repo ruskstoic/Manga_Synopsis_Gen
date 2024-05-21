@@ -22,7 +22,7 @@ from google.oauth2 import service_account
 from datetime import datetime, timedelta
 import pytz
 import tensorflow as tf
-
+import pickle
 
 ## Streamlit Tracker Start
 streamlit_analytics.start_tracking()
@@ -54,8 +54,8 @@ def log_user_info(user_name, user_id, formatted_datetime, tab_id, seed_text, gen
                'Tab_ID': tab_id,
                'Seed_Text': seed_text,
                'Gen_Text': gen_text,
+               'Num_Gen_Words': num_gen_words,
                'Temp': temperature,
-               'Num_Gen_Words': num_gen_words
               }
   df_log_entry = pd.DataFrame([user_info])
   return df_log_entry
@@ -98,24 +98,36 @@ if user_name:
   ## User has input seed text and click generate button
   if seed_text:
     if st.button('Generate'):
-      
-      #Get Model from Google Drive
       st.write('Generating...')
-      model_id = ''
+      
+      #Get 1st Model from Google Drive
+      model1_4o200epoch31_id = '1iLgUBjkhA7pe6BGN55vYoIRpgB4-We9k'
       request = service.files().get_media(fileId=model_id)
       fh = io.BytesIO()
       downloader = request.execute()
       fh.write(downloader)
       fh.seek(0)
-  
       #Save Model to a Temporary File
-      temp_file_path = '/tmp/model_name.h5'
-      with open(temp_file_path, 'wb') as f:
+      temp_model1_filepath = '/tmp/model1.h5'
+      with open(temp_model1_filepath, 'wb') as f:
         f.write(fh.read())
-  
       #Load Model on Tensorflow
-      model = tf.keras.models.load_model(temp_file_path)
-      st.success('Model file loaded successfully!')
+      model1 = tf.keras.models.load_model(temp_model1_filepath)
+      st.success('Model1 file loaded successfully!')
+
+      #Get Tokenizer from Google Drive
+      tokenizer_id = '1-0hDttThxsO_gS9Sq_S4RGpifQksV5vP'
+      request = service.files().get_media(fileId=model_id)
+      fh = io.BytesIO()
+      downloader = request.execute()
+      fh.write(downloader)
+      fh.seek(0)
+      #Save Model to a Temporary File
+      temp_tokenizer_filepath = '/tmp/tokenizer.pickle'
+      with open(temp_tokenizer_filepath, 'rb') as handle:
+        handle.write(fh.read())
+      loaded_tokenizer = pickle.load(handle)
+      st.success('Tokenizer file loaded successfully!')
   
       #Simple Generator Function
       def generate_text(model, tokenizer, seq_len, seed_text, num_gen_words, temperature):
@@ -156,9 +168,9 @@ if user_name:
   
       #Generate Synopsis and Show Result
       filter_size = 10 #changeable parameter
-      gen_text = generate_text(model = model,
-                                  tokenizer = tokenizer_second,
-                                  seq_len = filter_size - 1, # why does -1 work also
+      gen_text = generate_text(model = model1,
+                                  tokenizer = loaded_tokenizer,
+                                  seq_len = filter_size, # why does -1 work also
                                   seed_text = seed_text,
                                   num_gen_words = num_gen_words,
                                   temperature = temperature)
@@ -169,7 +181,7 @@ if user_name:
                                    num_gen_words=num_gen_words)
       conn = st.connection('gsheets', type=GSheetsConnection)
       existing_data = conn.read(worksheet='Sheet2', usecols=[0,1,2,3,4,5,6,7], end='A')
-      existing_df = pd.DataFrame(existing_data, columns=['Name', 'User_ID', 'Datetime_Entered', 'Tab_ID', 'Seed_Text', 'Gen_Text', 'Temp', 'Num_Gen_Words'])
+      existing_df = pd.DataFrame(existing_data, columns=['Name', 'User_ID', 'Datetime_Entered', 'Tab_ID', 'Seed_Text', 'Gen_Text', 'Num_Gen_Words', 'Temp'])
       combined_df = pd.concat([existing_df, log_entry_df], ignore_index=True)
       conn.update(worksheet='Sheet2', data=combined_df)
       st.cache_data.clear()
