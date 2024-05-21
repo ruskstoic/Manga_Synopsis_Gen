@@ -2,7 +2,7 @@ streamlit
 pandas
 numpy
 uuid
-tensorflow
+tensorflow==2.15.0
 requests
 st-gsheets-connection
 streamlit-analytics
