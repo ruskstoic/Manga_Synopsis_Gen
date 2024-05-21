@@ -102,7 +102,7 @@ if user_name:
       st.write('Generating...')
       
       #Get 1st Model from Google Drive
-      model1_4o200epoch31_id = '1iLgUBjkhA7pe6BGN55vYoIRpgB4-We9k'
+      model1_4o200epoch31_id = '1CgUsxJ-0Hk4WqdxvJh45a1obiQQ_14JC' #'1iLgUBjkhA7pe6BGN55vYoIRpgB4-We9k'
       request = service.files().get_media(fileId=model1_4o200epoch31_id)
       fh = io.BytesIO()
       downloader = request.execute()
