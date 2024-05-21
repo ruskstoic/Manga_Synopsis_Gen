@@ -111,7 +111,7 @@ if user_name:
       fh.write(downloader)
       fh.seek(0)
       #Save Model to a Temporary File
-      temp_model1_filepath = '/tmp/model1.h5'
+      temp_model1_filepath = '/tmp/model1.keras'
       with open(temp_model1_filepath, 'wb') as f:
         f.write(fh.read())
       #Load Model on Tensorflow
