@@ -115,7 +115,7 @@ if user_name:
       with open(temp_model1_filepath, 'wb') as f:
         f.write(fh.read())
       #Load Model on Tensorflow
-      model1 = tf.keras.models.load_model(temp_model1_filepath,custom_objects={'dtype': 'float32'})
+      model1 = tf.keras.models.load_model(temp_model1_filepath)
       st.success('Model1 file loaded successfully!')
 
       #Get Tokenizer from Google Drive
