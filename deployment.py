@@ -26,6 +26,7 @@ import pickle
 import io
 import tempfile
 
+st.write(tf.__version__)
 ## Streamlit Tracker Start
 streamlit_analytics.start_tracking()
 unsafe_password = st.secrets['ST_ANALYTICS_PW'] 
