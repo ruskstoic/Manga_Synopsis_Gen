@@ -103,7 +103,7 @@ if user_name:
       
       #Get 1st Model from Google Drive
       model1_4o200epoch31_id = '1iLgUBjkhA7pe6BGN55vYoIRpgB4-We9k'
-      request = service.files().get_media(fileId=model_id)
+      request = service.files().get_media(fileId=model1_4o200epoch31_id)
       fh = io.BytesIO()
       downloader = request.execute()
       fh.write(downloader)
@@ -118,7 +118,7 @@ if user_name:
 
       #Get Tokenizer from Google Drive
       tokenizer_id = '1-0hDttThxsO_gS9Sq_S4RGpifQksV5vP'
-      request = service.files().get_media(fileId=model_id)
+      request = service.files().get_media(fileId=tokenizer_id)
       fh = io.BytesIO()
       downloader = request.execute()
       fh.write(downloader)
