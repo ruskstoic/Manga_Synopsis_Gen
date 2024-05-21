@@ -23,6 +23,7 @@ from datetime import datetime, timedelta
 import pytz
 import tensorflow as tf
 import pickle
+import io
 
 ## Streamlit Tracker Start
 streamlit_analytics.start_tracking()
