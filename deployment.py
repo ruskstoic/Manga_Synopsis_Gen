@@ -149,11 +149,15 @@ if user_name:
           pad_encoded = pad_sequences([encoded_text], maxlen=seq_len, truncating='pre', dtype='float32') #expects a list of sequences
           pad_encoded = np.array(pad_encoded)
           pred_distribution = model.predict(pad_encoded, verbose=0)[0]
+
+          assert pred_distribution.ndim == 1, f"Expected 1D array, got {pred_distribution.ndim}D array"
       
           #Temperature parameter
           new_pred_distribution = np.power(pred_distribution, (1/temperature))
           new_pred_distribution[prev_pred_word_idx] = 0 #prevents previous word from being next word
           new_pred_distribution = new_pred_distribution / new_pred_distribution.sum()
+
+          assert pred_distribution.ndim == 1, f"Expected 1D array, got {pred_distribution.ndim}D array"
       
           #Choose word with highest probability as next word
           choices = range(new_pred_distribution.size)
