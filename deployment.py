@@ -28,7 +28,8 @@ import io
 import tempfile
 import requests
 
-st.write(tf.__version__)
+# st.write(tf.__version__)
+
 ## Streamlit Tracker Start
 streamlit_analytics.start_tracking()
 unsafe_password = st.secrets['ST_ANALYTICS_PW'] 
@@ -106,6 +107,7 @@ if user_name:
       st.write('Generating...')
       
       #Get 1st Model from Google Drive
+      st.write('Loading model1...')
       model1_4o200epoch31_id = '1-R3xMvkZMS7fruMxV-zCCABxiWkmHsP4'
       request = service.files().get_media(fileId=model1_4o200epoch31_id)
       fh = io.BytesIO()
@@ -130,8 +132,8 @@ if user_name:
       #Save Model to a Temporary File
       temp_tokenizer_filepath = '/tmp/tokenizer.pickle'
       with open(temp_tokenizer_filepath, 'rb') as handle:
-        handle.write(fh.read())
-      loaded_tokenizer = pickle.load(handle)
+        # handle.write(fh.read())
+        loaded_tokenizer = pickle.load(handle)
       st.success('Tokenizer file loaded successfully!')
   
       #Simple Generator Function
