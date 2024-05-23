@@ -134,7 +134,7 @@ if user_name:
       # with open(temp_model1_filepath, 'wb') as f:
       #   f.write(fh.read())
       # #Load Model on Tensorflow
-      download_file(file_id='1-R3xMvkZMS7fruMxV-zCCABxiWkmHsP4', destination='/tmp/model1.keras)
+      download_file(file_id='1-R3xMvkZMS7fruMxV-zCCABxiWkmHsP4', destination='/tmp/model1.keras')
       model1 = tf.keras.models.load_model(temp_model1_filepath)
       st.success('Model1 file loaded successfully!')
 
