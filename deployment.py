@@ -55,7 +55,7 @@ def get_or_create_tab_ID():
   return st.session_state.tab_id
 
 #Function to compile user info
-def log_user_info(user_name, user_id, formatted_datetime, tab_id, seed_text, gen_text, temperature, num_gen_words):
+def log_user_info(user_name, user_id, formatted_datetime, tab_id, seed_text, gen_text, num_gen_words, temperature,):
   user_info = {'Name': user_name,
                'User_ID': user_id,
                'Datetime_Entered': formatted_datetime,
@@ -84,7 +84,7 @@ user_name = st.text_input('Hello! What is your name?')
 
 ## Start User Pipeline
 if user_name:
-  st.write(f'Hello {user_name}')
+  st.write(f'Hello {user_name}!')
 
   # Create User ID and Tab ID
   user_id = cookies['user_id']
@@ -187,11 +187,11 @@ if user_name:
                                   seed_text = seed_text,
                                   num_gen_words = num_gen_words,
                                   temperature = temperature)
-      st.write(f'Seed Text: {seed_text}\n\nModel Generation: {gen_text}...')
+      st.success(f'Seed Text: {seed_text}\n\nModel Generation: {gen_text}...')
   
       ## Save Data to Google Sheet
-      log_entry_df = log_user_info(user_name=user_name, user_id=user_id, formatted_datetime=formatted_datetime, tab_id=tab_id, seed_text=seed_text, gen_text=gen_text, temperature=temperature,
-                                   num_gen_words=num_gen_words)
+      log_entry_df = log_user_info(user_name=user_name, user_id=user_id, formatted_datetime=formatted_datetime, tab_id=tab_id, seed_text=seed_text, gen_text=gen_text, num_gen_words=num_gen_words,
+                                  temperature=temperature)
       st.write(log_entry_df)
       conn = st.connection('gsheets', type=GSheetsConnection)
       existing_data = conn.read(worksheet='Sheet2', usecols=[0,1,2,3,4,5,6,7], end='A')
@@ -199,6 +199,7 @@ if user_name:
       combined_df = pd.concat([existing_df, log_entry_df], ignore_index=True)
       conn.update(worksheet='Sheet2', data=combined_df)
       st.cache_data.clear()
+      st.write('hello there')
 
 ## Streamlit Tracker End
 streamlit_analytics.stop_tracking(unsafe_password)
