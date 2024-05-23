@@ -195,7 +195,11 @@ if user_name:
       st.write(existing_df)
       combined_df = pd.concat([existing_df, log_entry_df], ignore_index=True)
       st.write(combined_df)
-      conn.update(worksheet='Sheet2', data=combined_df)
+      try:
+        conn.update(worksheet='Sheet2', data=combined_df)
+        st.success("Data updated successfully!")
+      except Exception as e:
+        st.error(f"An error occurred while updating data: {e}")
       st.cache_data.clear()
 
 ## Streamlit Tracker End
