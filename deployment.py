@@ -190,11 +190,11 @@ if user_name:
                                   temperature=temperature)
       st.write(log_entry_df)
       conn = st.connection('gsheets', type=GSheetsConnection)
-      # existing_data = conn.read(worksheet='Sheet2', usecols=[0,1,2,3,4,5,6,7], end='A')
-      # existing_df = pd.DataFrame(existing_data, columns=['Name', 'User_ID', 'Datetime_Entered', 'Tab_ID', 'Seed_Text', 'Gen_Text', 'Num_Gen_Words', 'Temp'])
-      # combined_df = pd.concat([existing_df, log_entry_df], ignore_index=True)
-      # st.write(combined_df)
-      conn.update(worksheet='Sheet2', data=log_entry_df)
+      existing_data = conn.read(worksheet='Sheet2', usecols=[0,1,2,3,4,5,6,7], end='A')
+      existing_df = pd.DataFrame(existing_data, columns=['Name', 'User_ID', 'Datetime_Entered', 'Tab_ID', 'Seed_Text', 'Gen_Text', 'Num_Gen_Words', 'Temp'])
+      combined_df = pd.concat([existing_df, log_entry_df], ignore_index=True)
+      st.write(combined_df)
+      conn.update(worksheet='Sheet2', data=combined_df)
       st.cache_data.clear()
 
 ## Streamlit Tracker End
