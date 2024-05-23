@@ -145,7 +145,7 @@ if user_name:
         prev_pred_word_idx = 0
     
         for i in range(num_gen_words-1):
-          encoded_text = tokenizer_second.texts_to_sequences([input_text])[0]
+          encoded_text = tokenizer.texts_to_sequences([input_text])[0]
           pad_encoded = pad_sequences([encoded_text], maxlen=seq_len, truncating='pre', dtype='float32') #expects a list of sequences
           pad_encoded = np.array(pad_encoded)
           pred_distribution = model.predict(pad_encoded, verbose=0)[0]
