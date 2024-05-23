@@ -165,14 +165,14 @@ if user_name:
           output_text.append(pred_word)
       
           #Create Index-Word-Probability Dataframe for Data Visualisation
-          if i==num_gen_words - 1:
-            chosen = pd.DataFrame({'Probability': new_pred_distribution})
-            chosen['Word'] = chosen.index.map(lambda x: tokenizer.index_word.get(x, ''))
-            chosen = chosen[['Word', 'Probability']]
-            chosen_top3 = chosen.nlargest(3, 'Probability')
-            chosen_bottom3 = chosen.nsmallest(3, 'Probability')
-            st.write('Top 3 Probabilities:', chosen_top3) ###comment out print for pipeline
-            st.write('Bottom 3 Probabilities:', chosen_bottom3) ###comment out print for pipeline
+          # if i==num_gen_words - 1:
+          #   chosen = pd.DataFrame({'Probability': new_pred_distribution})
+          #   chosen['Word'] = chosen.index.map(lambda x: tokenizer.index_word.get(x, ''))
+          #   chosen = chosen[['Word', 'Probability']]
+          #   chosen_top3 = chosen.nlargest(3, 'Probability')
+          #   chosen_bottom3 = chosen.nsmallest(3, 'Probability')
+          #   st.write('Top 3 Probabilities:', chosen_top3) ###comment out print for pipeline
+          #   st.write('Bottom 3 Probabilities:', chosen_bottom3) ###comment out print for pipeline
         return ' '.join(output_text)
   
       #Generate Synopsis and Show Result
