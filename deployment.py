@@ -148,7 +148,7 @@ if user_name:
           encoded_text = tokenizer.texts_to_sequences([input_text])[0]
           pad_encoded = pad_sequences([encoded_text], maxlen=seq_len, truncating='pre', dtype='float32') #expects a list of sequences
           pad_encoded = np.array(pad_encoded)
-          pred_distribution = model.predict(pad_encoded, verbose=0)[0]
+          pred_distribution = model.predict(pad_encoded, verbose=0)[0][-1]
 
           assert pred_distribution.ndim == 1, f"Expected 1D array, got {pred_distribution.ndim}D array"
       
