@@ -106,17 +106,18 @@ if user_name:
     if st.button('Generate'):
       st.write('Generating...')
       
-     def download_file(file_id, destination):
-       request = service.files().get_media(fileId=file_id)
-       fh = io.BytesIO()
-       downloader = request.execute()
-       done = False
-       while not done:
-         status, done = downloader.next_chunk()
-         print(f"Download {int(status.progress() * 100)}%.")
-       fh.write(downloader)
-       with open(destination, 'wb') as f:
-         f.write(fh.read())
+      def download_file(file_id, destination):
+        request = service.files().get_media(fileId=file_id)
+        fh = io.BytesIO()
+        downloader = request.execute()
+        done = False
+        while not done:
+          status, done = downloader.next_chunk()
+          print(f"Download {int(status.progress() * 100)}%.")
+        fh.write(downloader)
+        fh.seek(0)
+        with open(destination, 'wb') as f:
+          f.write(fh.read())
 
       st.write('LOADING MODEL ONE')
       
