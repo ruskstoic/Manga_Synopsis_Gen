@@ -113,7 +113,7 @@ if user_name:
         done = False
         while not done:
           status, done = downloader.next_chunk()
-          print(f"Download {int(status.progress() * 100)}%.")
+          st.write(f"Download {int(status.progress() * 100)}%.")
         fh.seek(0)
         with open(destination, 'wb') as f:
           f.write(fh.read())
@@ -134,7 +134,7 @@ if user_name:
       #   f.write(fh.read())
       # #Load Model on Tensorflow
       download_file(file_id='1-R3xMvkZMS7fruMxV-zCCABxiWkmHsP4', destination='/tmp/model1.keras')
-      model1 = tf.keras.models.load_model(temp_model1_filepath)
+      model1 = tf.keras.models.load_model('/tmp/model1.keras')
       st.success('Model1 file loaded successfully!')
 
       #Get Tokenizer from Google Drive
