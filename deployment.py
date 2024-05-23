@@ -115,7 +115,7 @@ if user_name:
         done = False
         while not done:
           status, done = downloader.next_chunk()
-          st.write(f"{filename} Downloadeded {int(status.progress() * 100)}%.")
+          st.write(f"{filename} Downloaded {int(status.progress() * 100)}%.")
         fh.seek(0)
         # if destination[0:4:-1] == 'keras':
         with open(destination, 'wb') as f:
@@ -131,7 +131,7 @@ if user_name:
       st.success('Model1 file loaded successfully!')
 
       #Get Tokenizer from Google Drive
-      tokenizer_id = '1-0hDttThxsO_gS9Sq_S4RGpifQksV5vP'
+      tokenizer_id = '1V-UihkeuzhrjXl_qUjisgxJqju65JFCP'
       temp_tokenizer_filepath = '/tmp/tokenizer.pickle'
       download_file(file_id=tokenizer_id, destination=temp_tokenizer_filepath, filename='Tokenizer1')
       with open(temp_tokenizer_filepath, 'rb') as handle:
