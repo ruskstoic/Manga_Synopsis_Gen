@@ -188,14 +188,11 @@ if user_name:
       ## Save Data to Google Sheet
       log_entry_df = log_user_info(user_name=user_name, user_id=user_id, formatted_datetime=formatted_datetime, tab_id=tab_id, seed_text=seed_text, gen_text=gen_text, num_gen_words=num_gen_words,
                                   temperature=temperature)
-      st.write(log_entry_df)
       conn = st.connection('gsheets', type=GSheetsConnection)
       existing_data = conn.read(worksheet='Sheet2', usecols=[0,1,2,3,4,5,6,7], end='A')
       existing_df = pd.DataFrame(existing_data, columns=['Name', 'User_ID', 'Datetime_Entered', 'Tab_ID', 'Seed_Text', 'Gen_Text', 'Num_Gen_Words', 'Temp'])
-      st.write(existing_df)
       combined_df = pd.concat([existing_df, log_entry_df], ignore_index=True)
-      st.write(combined_df)
-      conn.update(worksheet='Sheet2', data=log_entry_df)
+      conn.update(worksheet='Sheet2', data=combined_df)
       st.cache_data.clear()
 
 ## Streamlit Tracker End
