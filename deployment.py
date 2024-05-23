@@ -106,45 +106,30 @@ if user_name:
     if st.button('Generate'):
       st.write('Generating...')
       
-      def download_file(file_id, destination):
+      def download_file(file_id, destination, filename):
         request = service.files().get_media(fileId=file_id)
         fh = io.BytesIO()
         downloader = MediaIoBaseDownload(fh, request)
         done = False
         while not done:
           status, done = downloader.next_chunk()
-          st.write(f"Download {int(status.progress() * 100)}%.")
+          st.write(f"{filename} Downloadeded {int(status.progress() * 100)}%.")
         fh.seek(0)
-        with open(destination, 'wb') as f:
-          f.write(fh.read())
-
-      st.write('LOADING MODEL ONE')
+        if destination[0:4:-1] == 'keras':
+          with open(destination, 'wb') as f:
+            f.write(fh.read())
+        # if destination[0:5:-1] == 'pickle':
+          
       
-      # #Get 1st Model from Google Drive
-      # st.write('Loading model1...')
-      # model1_4o200epoch31_id = '1-R3xMvkZMS7fruMxV-zCCABxiWkmHsP4'
-      # request = service.files().get_media(fileId=model1_4o200epoch31_id)
-      # fh = io.BytesIO()
-      # downloader = request.execute()
-      # fh.write(downloader)
-      # fh.seek(0)
-      # #Save Model to a Temporary File 
-      # temp_model1_filepath = '/tmp/model1.keras'
-      # with open(temp_model1_filepath, 'wb') as f:
-      #   f.write(fh.read())
-      # #Load Model on Tensorflow
-      download_file(file_id='1-R3xMvkZMS7fruMxV-zCCABxiWkmHsP4', destination='/tmp/model1.keras')
-      model1 = tf.keras.models.load_model('/tmp/model1.keras')
+      #Download, Save, Load 1st Model from Google Drive
+      model1_4o200epoch31_id = '1-R3xMvkZMS7fruMxV-zCCABxiWkmHsP4'
+      temp_model1_filepath = '/tmp/model1.keras'
+      download_file(file_id=model1_4o200epoch31_id, destination=temp_model1_filepath, Model1)
+      model1 = tf.keras.models.load_model(temp_model1_filepath)
       st.success('Model1 file loaded successfully!')
 
       #Get Tokenizer from Google Drive
       tokenizer_id = '1-0hDttThxsO_gS9Sq_S4RGpifQksV5vP'
-      request = service.files().get_media(fileId=tokenizer_id)
-      fh = io.BytesIO()
-      downloader = request.execute()
-      fh.write(downloader)
-      fh.seek(0)
-      #Save Model to a Temporary File
       temp_tokenizer_filepath = '/tmp/tokenizer.pickle'
       with open(temp_tokenizer_filepath, 'wb') as handle:
         # handle.write(fh.read())
