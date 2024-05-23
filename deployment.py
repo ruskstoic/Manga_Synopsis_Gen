@@ -109,12 +109,11 @@ if user_name:
       def download_file(file_id, destination):
         request = service.files().get_media(fileId=file_id)
         fh = io.BytesIO()
-        downloader = request.execute()
+        downloader = MediaIoBaseDownload(fh, request)
         done = False
         while not done:
           status, done = downloader.next_chunk()
           print(f"Download {int(status.progress() * 100)}%.")
-        fh.write(downloader)
         fh.seek(0)
         with open(destination, 'wb') as f:
           f.write(fh.read())
