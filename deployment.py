@@ -106,14 +106,14 @@ if user_name:
       st.write('Generating...')
       
       #Get 1st Model from Google Drive
-      model1_4o200epoch31_id = '1iLgUBjkhA7pe6BGN55vYoIRpgB4-We9k' # '11li5HGqmLs6QFLMeNIa8OLS1_D24X-YE' #'1-3KRr16EALyujhHpaCHVTHAkF6nig4YS' #
+      model1_4o200epoch31_id = '1-R3xMvkZMS7fruMxV-zCCABxiWkmHsP4'
       request = service.files().get_media(fileId=model1_4o200epoch31_id)
       fh = io.BytesIO()
       downloader = request.execute()
       fh.write(downloader)
       fh.seek(0)
       #Save Model to a Temporary File 
-      temp_model1_filepath = '/tmp/model1.h5'
+      temp_model1_filepath = '/tmp/model1.keras'
       with open(temp_model1_filepath, 'wb') as f:
         f.write(fh.read())
       #Load Model on Tensorflow
