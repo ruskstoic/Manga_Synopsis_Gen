@@ -105,7 +105,7 @@ if user_name:
   if seed_text:
     if st.button('Generate'):
       st.write('Generating...')
-
+      
      def download_file(file_id, destination):
         request = service.files().get_media(fileId=file_id)
         fh = io.BytesIO()
@@ -118,6 +118,7 @@ if user_name:
         fh.seek(0)
         with open(destination, 'wb') as f:
             f.write(fh.read())
+      st.write('LOADING MODEL ONE')
       
       # #Get 1st Model from Google Drive
       # st.write('Loading model1...')
