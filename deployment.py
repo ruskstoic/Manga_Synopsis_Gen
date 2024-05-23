@@ -55,7 +55,7 @@ def get_or_create_tab_ID():
   return st.session_state.tab_id
 
 #Function to compile user info
-def log_user_info(user_name, user_id, formatted_datetime, tab_id, seed_text, gen_text, num_gen_words, temperature,):
+def log_user_info(user_name, user_id, formatted_datetime, tab_id, seed_text, gen_text, num_gen_words, temperature):
   user_info = {'Name': user_name,
                'User_ID': user_id,
                'Datetime_Entered': formatted_datetime,
@@ -149,16 +149,12 @@ if user_name:
           pad_encoded = pad_sequences([encoded_text], maxlen=seq_len, truncating='pre', dtype='float32') #expects a list of sequences
           pad_encoded = np.array(pad_encoded)
           pred_distribution = model.predict(pad_encoded, verbose=0)[0][-1]
-
-          assert pred_distribution.ndim == 1, f"Expected 1D array, got {pred_distribution.ndim}D array"
       
           #Temperature parameter
           new_pred_distribution = np.power(pred_distribution, (1/temperature))
           new_pred_distribution[prev_pred_word_idx] = 0 #prevents previous word from being next word
           new_pred_distribution = new_pred_distribution / new_pred_distribution.sum()
 
-          assert pred_distribution.ndim == 1, f"Expected 1D array, got {pred_distribution.ndim}D array"
-      
           #Choose word with highest probability as next word
           choices = range(new_pred_distribution.size)
           pred_word_idx = np.random.choice(a=choices, p=new_pred_distribution) #randomly chooses word
@@ -197,6 +193,7 @@ if user_name:
       existing_data = conn.read(worksheet='Sheet2', usecols=[0,1,2,3,4,5,6,7], end='A')
       existing_df = pd.DataFrame(existing_data, columns=['Name', 'User_ID', 'Datetime_Entered', 'Tab_ID', 'Seed_Text', 'Gen_Text', 'Num_Gen_Words', 'Temp'])
       combined_df = pd.concat([existing_df, log_entry_df], ignore_index=True)
+      st.write(combined_df)
       conn.update(worksheet='Sheet2', data=combined_df)
       st.cache_data.clear()
       st.write('hello there')
