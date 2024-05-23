@@ -27,6 +27,8 @@ import pickle
 import io
 import tempfile
 import requests
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # st.write(tf.__version__)
 
