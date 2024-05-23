@@ -131,7 +131,7 @@ if user_name:
       fh.seek(0)
       #Save Model to a Temporary File
       temp_tokenizer_filepath = '/tmp/tokenizer.pickle'
-      with open(temp_tokenizer_filepath, 'rb') as handle:
+      with open(temp_tokenizer_filepath, 'wb') as handle:
         # handle.write(fh.read())
         loaded_tokenizer = pickle.load(handle)
       st.success('Tokenizer file loaded successfully!')
