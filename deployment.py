@@ -115,9 +115,9 @@ if user_name:
           status, done = downloader.next_chunk()
           st.write(f"{filename} Downloadeded {int(status.progress() * 100)}%.")
         fh.seek(0)
-        if destination[0:4:-1] == 'keras':
-          with open(destination, 'wb') as f:
-            f.write(fh.read())
+        # if destination[0:4:-1] == 'keras':
+        with open(destination, 'wb') as f:
+          f.write(fh.read())
         # if destination[0:5:-1] == 'pickle':
           
       
@@ -131,10 +131,10 @@ if user_name:
       #Get Tokenizer from Google Drive
       tokenizer_id = '1-0hDttThxsO_gS9Sq_S4RGpifQksV5vP'
       temp_tokenizer_filepath = '/tmp/tokenizer.pickle'
+      download_file(file_id=tokenizer_id, destination=temp_tokenizer_filepath, filename='Tokenizer1')
       with open(temp_tokenizer_filepath, 'wb') as handle:
-        # handle.write(fh.read())
         loaded_tokenizer = pickle.load(handle)
-      st.success('Tokenizer file loaded successfully!')
+      st.success('Tokenizer1 file loaded successfully!')
   
       #Simple Generator Function
       def generate_text(model, tokenizer, seq_len, seed_text, num_gen_words, temperature):
