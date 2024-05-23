@@ -132,7 +132,7 @@ if user_name:
       tokenizer_id = '1-0hDttThxsO_gS9Sq_S4RGpifQksV5vP'
       temp_tokenizer_filepath = '/tmp/tokenizer.pickle'
       download_file(file_id=tokenizer_id, destination=temp_tokenizer_filepath, filename='Tokenizer1')
-      with open(temp_tokenizer_filepath, 'wb') as handle:
+      with open(temp_tokenizer_filepath, 'rb') as handle:
         loaded_tokenizer = pickle.load(handle)
       st.success('Tokenizer1 file loaded successfully!')
   
