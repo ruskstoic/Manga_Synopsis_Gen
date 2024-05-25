@@ -212,44 +212,31 @@ if user_name:
 
       #Beam Search 1.4 Generator Function
       def join_and_capitalise_tokens(tokens):
-      """Join tokens ensuring no space before specified punctuation marks and capitalize first letter after sentence-ending punctuation."""
-      result = []
-      capitalize_next = True  # Capitalize the first word
-    
-      for i, token in enumerate(tokens):
-          if len(result) > 0: 
-              if token in {'.', '!', '?'}:
-                  if result:
-                      result[-1] += token  # Append punctuation mark to the previous token
-                  capitalize_next = True  # Set flag to capitalize next token
-              elif token in {',', "'s", "'t", "n't"} and i > 0:
-                  result[-1] += token  # Append punctuation mark to the previous token
-              else:
-                  if capitalize_next and token:
-                      token = token.capitalize()
-                      capitalize_next = False
-                  result.append(token)
-          else:  # Handling the first token
-              if token in {'.', '!', '?'}:
-                  result.append(token)  # Append punctuation mark to the result
-              elif token:
-                  token = token.capitalize()  # Capitalize the first token
-                  result.append(token)
-      return ' '.join(result)
-    
+        """Join tokens ensuring no space before specified punctuation marks and capitalize first letter after sentence-ending punctuation."""
+        result = []
+        capitalize_next = True  # Capitalize the first word
+      
         for i, token in enumerate(tokens):
-            if token in {'.', '!', '?'}:
-                if result:
+            if len(result) > 0: 
+                if token in {'.', '!', '?'}:
+                    if result:
+                        result[-1] += token  # Append punctuation mark to the previous token
+                    capitalize_next = True  # Set flag to capitalize next token
+                elif token in {',', "'s", "'t", "n't"} and i > 0:
                     result[-1] += token  # Append punctuation mark to the previous token
-                capitalize_next = True  # Set flag to capitalize next token
-            elif token in {',', "'s", "'t", "n't"} and i > 0:
-                result[-1] += token  # Append punctuation mark to the previous token
-            else:
-                if capitalize_next and token.isalpha():  # Check if the token is alphabetic
-                    token = token.capitalize()
-                    capitalize_next = False  # Reset flag after capitalizing
-                result.append(token)
+                else:
+                    if capitalize_next and token:
+                        token = token.capitalize()
+                        capitalize_next = False
+                    result.append(token)
+            else:  # Handling the first token
+                if token in {'.', '!', '?'}:
+                    result.append(token)  # Append punctuation mark to the result
+                elif token:
+                    token = token.capitalize()  # Capitalize the first token
+                    result.append(token)
         return ' '.join(result)
+        
     
       def calculate_levenshtein_distance(previous_beam, current_beam):
         distance = Levenshtein.distance(previous_beam, current_beam)
