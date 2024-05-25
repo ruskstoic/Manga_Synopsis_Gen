@@ -408,12 +408,12 @@ if user_name:
                                    num_gen_words=num_gen_words,temperature=temperature, nucleus_threshold=nucleus_threshold, DBS_diversity_rate=DBS_diversity_rate, beam_drop_rate=beam_drop_rate, simipen_switch=simipen_switch,
                                    DBS_switch=DBS_switch, DBW_switch=DBW_switch, beam_width=beam_width)
       conn = st.connection('gsheets', type=GSheetsConnection)
-      conn.update(worksheet='Sheet2', data=log_entry_df)
-      # existing_data = conn.read(worksheet='Sheet2', usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17], end='A')
-      # existing_df = pd.DataFrame(existing_data, columns=['Name', 'User_ID', 'Datetime_Entered', 'Tab_ID', 'Seed_Text', 'Gen_Text1', 'Gen_Text2','Num_Gen_Words', 'Temp', 'Nucleus_Threshold','DBS_Diversity_Rate',
-      #                                                    'DBS_Diversity_Rate','Beam_Drop_Rate','Similarity_Penalty','Diverse_Beam_Search','Dynamic_Beam_Width','Beam_Width'])
-      # combined_df = pd.concat([existing_df, log_entry_df], ignore_index=True)
-      # conn.update(worksheet='Sheet2', data=combined_df)
+      # conn.update(worksheet='Sheet2', data=log_entry_df) ##Swap with below to reset and append one row to sheets
+      existing_data = conn.read(worksheet='Sheet2', usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17], end='A')
+      existing_df = pd.DataFrame(existing_data, columns=['Name', 'User_ID', 'Datetime_Entered', 'Tab_ID', 'Seed_Text', 'Gen_Text1', 'Gen_Text2','Num_Gen_Words', 'Temp', 'Nucleus_Threshold','DBS_Diversity_Rate',
+                                                         'DBS_Diversity_Rate','Beam_Drop_Rate','Similarity_Penalty','Diverse_Beam_Search','Dynamic_Beam_Width','Beam_Width'])
+      combined_df = pd.concat([existing_df, log_entry_df], ignore_index=True)
+      conn.update(worksheet='Sheet2', data=combined_df)
       st.cache_data.clear()
       
 ## Streamlit Tracker End
