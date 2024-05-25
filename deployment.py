@@ -264,7 +264,7 @@ if user_name:
                         capitalize_next = False
                     result.append(token)
     
-        return seed_text + ' ' + ' '.join(result)
+        return result
         
     
       def calculate_levenshtein_distance(previous_beam, current_beam):
