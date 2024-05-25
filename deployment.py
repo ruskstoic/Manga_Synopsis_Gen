@@ -397,7 +397,7 @@ if user_name:
       st.success(seed_text + join_and_capitalise_tokens(model2_generated_text) + '...')
   
       ## Save Data to Google Sheet
-      log_entry_df = log_user_info(user_name=user_name, user_id=user_id, formatted_datetime=formatted_datetime, tab_id=tab_id, seed_text=seed_text, gen_text1=model1_generated_text, gen_text2=model2_generated_text,
+      log_entry_df = log_user_info(user_name=user_name, user_id=user_id, formatted_datetime=formatted_datetime, tab_id=tab_id, seed_text=seed_text, gen_text1=join_and_capitalise_tokens(model1_generated_text), gen_text2=join_and_capitalise_tokens(model2_generated_text),
                                    num_gen_words=num_gen_words,temperature=temperature, nucleus_threshold=nucleus_threshold, DBS_diversity_rate=DBS_diversity_rate, beam_drop_rate=beam_drop_rate, simipen_switch=simipen_switch,
                                    DBS_switch=DBS_switch, DBW_switch=DBW_switch, beam_width=beam_width)
       conn = st.connection('gsheets', type=GSheetsConnection)
