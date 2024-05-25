@@ -364,7 +364,7 @@ if user_name:
                                        simipen_switch=simipen_switch,
                                       DBS_switch=DBS_switch,
                                         beam_dropping=True)
-      st.success(seed_text + model1_generated_text,'...')
+      st.success(seed_text + model1_generated_text + '...')
       st.write('Generating text for model2 now...')
 
       #GF1.4 Generate Text for Model1
@@ -383,7 +383,7 @@ if user_name:
                                        simipen_switch=simipen_switch,
                                       DBS_switch=DBS_switch,
                                         beam_dropping=True)
-      st.success(seed_text + model2_generated_text,'...')
+      st.success(seed_text + model2_generated_text + '...')
   
       ## Save Data to Google Sheet
       log_entry_df = log_user_info(user_name=user_name, user_id=user_id, formatted_datetime=formatted_datetime, tab_id=tab_id, seed_text=seed_text, gen_text1=model1_generated_text, gen_text2=model2_generated_text,
