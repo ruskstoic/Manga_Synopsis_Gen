@@ -57,7 +57,7 @@ def get_or_create_tab_ID():
 
 #Function to compile user info
 def log_user_info(user_name, user_id, formatted_datetime, tab_id, seed_text, gen_text1, gen_text2, num_gen_words, temperature, nucleus_threshold, DBS_diversity_rate, beam_drop_rate, simipen_switch,
-                  DBS_Switch, DBW_Switch, beam_width):
+                  DBW_switch, DBW_switch, beam_width):
   user_info = {'Name': user_name,
                'User_ID': user_id,
                'Datetime_Entered': formatted_datetime,
@@ -71,8 +71,8 @@ def log_user_info(user_name, user_id, formatted_datetime, tab_id, seed_text, gen
                'DBS_Diversity_Rate': DBS_diversity_rate,
                'Beam_Drop_Rate': beam_drop_rate,
                'Similarity_Penalty': simipen_switch,
-               'Diverse_Beam_Search': DBS_Switch,
-               'Dynamic_Beam_Width': DBW_Switch,
+               'Diverse_Beam_Search': DBW_switch,
+               'Dynamic_Beam_Width': DBW_switch,
                'Beam_Width': beam_width
               }
   df_log_entry = pd.DataFrame([user_info])
@@ -115,9 +115,9 @@ if user_name:
   beam_drop_rate = float(st.slider('Choose the Beam Drop Rate You Would Like (Introduces randomness by randomly dropping beams to increase diversity)', 0.0, 0.5))
   simipen_switch = st.selectbox('Select the Similarity Penalty You Would Like to Apply',
                                 (None,'jaccard', 'levenshtein'))
-  DBS_Switch = st.toggle('Activate Diverse Beam Search (Promotes generating varied sequences by penalizing similar beams)')
-  DBW_Switch = st.toggle('Activate Dynamic Beam Width (Automatically adjusts beam width based on prediction confidence to balance quality and diversity)')
-  if DBW_Switch:
+  DBS_switch = st.toggle('Activate Diverse Beam Search (Promotes generating varied sequences by penalizing similar beams)')
+  DBW_switch = st.toggle('Activate Dynamic Beam Width (Automatically adjusts beam width based on prediction confidence to balance quality and diversity)')
+  if DBW_switch:
     beam_width = int(st.slider('Choose the Number of Beams You Would Like (More beams means more possibilities, but also longer generation time)', 3, 8))
   else:
     beam_width = 3
@@ -387,7 +387,7 @@ if user_name:
       ## Save Data to Google Sheet
       log_entry_df = log_user_info(user_name=user_name, user_id=user_id, formatted_datetime=formatted_datetime, tab_id=tab_id, seed_text=seed_text, gen_text1=model1_generated_text, gen_text2=model2_generated_text,
                                    num_gen_words=num_gen_words,temperature=temperature, nucleus_threshold=nucleus_threshold, DBS_diversity_rate=DBS_diversity_rate, beam_drop_rate=beam_drop_rate, simipen_switch=simipen_switch,
-                                   DBS_Switch=DBS_Switch, DBW_Switch=DBW_Switch, beam_width=beam_width)
+                                   DBS_switch=DBS_switch, DBW_switch=DBW_switch, beam_width=beam_width)
       conn = st.connection('gsheets', type=GSheetsConnection)
       existing_data = conn.read(worksheet='Sheet2', usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17], end='A')
       existing_df = pd.DataFrame(existing_data, columns=['Name', 'User_ID', 'Datetime_Entered', 'Tab_ID', 'Seed_Text', 'Gen_Text1', 'Gen_Text2','Num_Gen_Words', 'Temp', 'Nucleus_Threshold','DBS_Diversity_Rate',
