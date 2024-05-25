@@ -211,14 +211,24 @@ if user_name:
       # st.success(f'Seed Text: {seed_text}\n\nModel Generation: {gen_text}...')
 
       #Beam Search 1.4 Generator Function
-      def join_tokens(tokens):
-        """Join tokens ensuring no space before specified punctuation marks."""
+      def join_and_capitalise_tokens(tokens):
+        """Join tokens ensuring no space before specified punctuation marks and capitalize first letter after sentence-ending punctuation."""
         result = []
+        capitalize_next = False  # Flag to capitalize the next token
+    
         for i, token in enumerate(tokens):
-            if token in {'.', ',', '!', '?', "'s", "'t", "'nt"} and i > 0:
-              result[-1] += token  # Append punctuation mark to the previous token
+            if token in {'.', '!', '?'}:
+                if result:
+                    result[-1] += token  # Append punctuation mark to the previous token
+                capitalize_next = True  # Set flag to capitalize next token
+            elif token in {',', "'s", "'t", "n't"} and i > 0:
+                result[-1] += token  # Append punctuation mark to the previous token
             else:
-              result.append(token)
+                if capitalize_next and token.isalpha():  # Check if the token is alphabetic
+                    token = token.capitalize()
+                    capitalize_next = False  # Reset flag after capitalizing
+                result.append(token)
+    
         return ' '.join(result)
     
       def calculate_levenshtein_distance(previous_beam, current_beam):
@@ -345,7 +355,8 @@ if user_name:
               DBW_probability_threshold *= 0.1
             else:
               cooldown_counter -= 1
-        return ' '.join(beams[0][0][seed_text_length:])
+        # return ' '.join(beams[0][0][seed_text_length:])
+        return beams[0][0][seed_text_length:]
 
       #GF1.4 Generate Text for Model1
       filter_size = 10 #changeable parameter
@@ -364,7 +375,7 @@ if user_name:
                                        simipen_switch=simipen_switch,
                                       DBS_switch=DBS_switch,
                                         beam_dropping=True)
-      st.success(seed_text + model1_generated_text + '...')
+      st.success(seed_text + join_and_capitalise_tokens(model1_generated_text) + '...')
       st.write('Generating text for model2 now...')
 
       #GF1.4 Generate Text for Model1
@@ -383,18 +394,19 @@ if user_name:
                                        simipen_switch=simipen_switch,
                                       DBS_switch=DBS_switch,
                                         beam_dropping=True)
-      st.success(seed_text + model2_generated_text + '...')
+      st.success(seed_text + join_and_capitalise_tokens(model2_generated_text) + '...')
   
       ## Save Data to Google Sheet
       log_entry_df = log_user_info(user_name=user_name, user_id=user_id, formatted_datetime=formatted_datetime, tab_id=tab_id, seed_text=seed_text, gen_text1=model1_generated_text, gen_text2=model2_generated_text,
                                    num_gen_words=num_gen_words,temperature=temperature, nucleus_threshold=nucleus_threshold, DBS_diversity_rate=DBS_diversity_rate, beam_drop_rate=beam_drop_rate, simipen_switch=simipen_switch,
                                    DBS_switch=DBS_switch, DBW_switch=DBW_switch, beam_width=beam_width)
       conn = st.connection('gsheets', type=GSheetsConnection)
-      existing_data = conn.read(worksheet='Sheet2', usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17], end='A')
-      existing_df = pd.DataFrame(existing_data, columns=['Name', 'User_ID', 'Datetime_Entered', 'Tab_ID', 'Seed_Text', 'Gen_Text1', 'Gen_Text2','Num_Gen_Words', 'Temp', 'Nucleus_Threshold','DBS_Diversity_Rate',
-                                                         'DBS_Diversity_Rate','Beam_Drop_Rate','Similarity_Penalty','Diverse_Beam_Search','Dynamic_Beam_Width','Beam_Width'])
-      combined_df = pd.concat([existing_df, log_entry_df], ignore_index=True)
-      conn.update(worksheet='Sheet2', data=combined_df)
+      conn.update(worksheet='Sheet2', data=log_entry_df)
+      # existing_data = conn.read(worksheet='Sheet2', usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17], end='A')
+      # existing_df = pd.DataFrame(existing_data, columns=['Name', 'User_ID', 'Datetime_Entered', 'Tab_ID', 'Seed_Text', 'Gen_Text1', 'Gen_Text2','Num_Gen_Words', 'Temp', 'Nucleus_Threshold','DBS_Diversity_Rate',
+      #                                                    'DBS_Diversity_Rate','Beam_Drop_Rate','Similarity_Penalty','Diverse_Beam_Search','Dynamic_Beam_Width','Beam_Width'])
+      # combined_df = pd.concat([existing_df, log_entry_df], ignore_index=True)
+      # conn.update(worksheet='Sheet2', data=combined_df)
       st.cache_data.clear()
       
 ## Streamlit Tracker End
