@@ -213,33 +213,30 @@ if user_name:
       #Beam Search 1.4 Generator Function
       def join_and_capitalise_tokens(tokens):
         """Join tokens ensuring no space before specified punctuation marks and capitalize first letter after sentence-ending punctuation."""
-        if not tokens:  # Check if the list is empty
-            return ''  # Return an empty string if the list is empty
-    
         result = []
         capitalize_next = True  # Capitalize the first word
     
         for i, token in enumerate(tokens):
-            if i == 0:  # Handling the first token
+            if len(result) > 0: 
                 if token in {'.', '!', '?'}:
-                    result.append(token)  # Append punctuation mark to the result
-                    capitalize_next = True
-                else:
-                    token = token.capitalize()  # Capitalize the first token
-                    result.append(token)
-                    capitalize_next = False
-            else:
-                if token in {'.', '!', '?'}:
-                    if result:
-                        result[-1] += token  # Append punctuation mark to the previous token
+                    result[-1] += token  # Append punctuation mark to the previous token
                     capitalize_next = True  # Set flag to capitalize next token
-                elif token in {',', "'s", "'t", "n't"} and i > 0:
+                elif token in {',', "'s", "'t", "n't"}:
                     result[-1] += token  # Append punctuation mark to the previous token
                 else:
                     if capitalize_next and token:
                         token = token.capitalize()
                         capitalize_next = False
                     result.append(token)
+            else:  # Handling the first token
+                if token in {'.', '!', '?'}:
+                    result.append(token)  # Append punctuation mark to the result
+                else:
+                    if capitalize_next and token:
+                        token = token.capitalize()
+                        capitalize_next = False
+                    result.append(token)
+    
         return ' '.join(result)
         
     
