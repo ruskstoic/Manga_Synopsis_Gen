@@ -57,7 +57,7 @@ def get_or_create_tab_ID():
 
 #Function to compile user info
 def log_user_info(user_name, user_id, formatted_datetime, tab_id, seed_text, gen_text1, gen_text2, num_gen_words, temperature, nucleus_threshold, DBS_diversity_rate, beam_drop_rate, simipen_switch,
-                  DBW_switch, DBW_switch, beam_width):
+                  DBS_switch, DBW_switch, beam_width):
   user_info = {'Name': user_name,
                'User_ID': user_id,
                'Datetime_Entered': formatted_datetime,
