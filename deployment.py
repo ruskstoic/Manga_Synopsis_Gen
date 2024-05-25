@@ -395,6 +395,6 @@ if user_name:
       combined_df = pd.concat([existing_df, log_entry_df], ignore_index=True)
       conn.update(worksheet='Sheet2', data=combined_df)
       st.cache_data.clear()
-: 
+      
 ## Streamlit Tracker End
 streamlit_analytics.stop_tracking(unsafe_password)
