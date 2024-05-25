@@ -56,7 +56,8 @@ def get_or_create_tab_ID():
   return st.session_state.tab_id
 
 #Function to compile user info
-def log_user_info(user_name, user_id, formatted_datetime, tab_id, seed_text, gen_text1, gen_text2, num_gen_words, temperature, nucleus_threshold, DBS_diversity_rate, beam_drop_rate, simipen_switch, DBW_Switch, DBS_Switch):
+def log_user_info(user_name, user_id, formatted_datetime, tab_id, seed_text, gen_text1, gen_text2, num_gen_words, temperature, nucleus_threshold, DBS_diversity_rate, beam_drop_rate, simipen_switch,
+                  DBS_Switch, DBW_Switch, beam_width):
   user_info = {'Name': user_name,
                'User_ID': user_id,
                'Datetime_Entered': formatted_datetime,
@@ -70,8 +71,9 @@ def log_user_info(user_name, user_id, formatted_datetime, tab_id, seed_text, gen
                'DBS_Diversity_Rate': DBS_diversity_rate,
                'Beam_Drop_Rate': beam_drop_rate,
                'Similarity_Penalty': simipen_switch,
-               'Dynamic_Beam_Width': DBW_Switch,
                'Diverse_Beam_Search': DBS_Switch,
+               'Dynamic_Beam_Width': DBW_Switch,
+               'Beam_Width': beam_width
               }
   df_log_entry = pd.DataFrame([user_info])
   return df_log_entry
@@ -113,10 +115,14 @@ if user_name:
   beam_drop_rate = float(st.slider('Choose the Beam Drop Rate You Would Like (Introduces randomness by randomly dropping beams to increase diversity)', 0.0, 0.5))
   simipen_switch = st.selectbox('Select the Similarity Penalty You Would Like to Apply',
                                 ('jaccard', 'levenshtein', None))
-  DBW_Switch = st.toggle('Activate Dynamic Beam Width (Automatically adjusts beam width based on prediction confidence to balance quality and diversity)')
   DBS_Switch = st.toggle('Activate Diverse Beam Search (Promotes generating varied sequences by penalizing similar beams)')
+  DBW_Switch = st.toggle('Activate Dynamic Beam Width (Automatically adjusts beam width based on prediction confidence to balance quality and diversity)')
+  if DBW_Switch:
+    beam_width = int(st.slider('Choose the Number of Beams You Would Like (More beams means more possibilities, but also longer generation time)', 3, 8))
+  else:
+    beam_width = 3
   
-  st.write(seed_text, temperature, num_gen_words, nucleus_threshold, DBS_diversity_rate, beam_drop_rate, simipen_switch, DBW_Switch, DBS_Switch, beam_dropping)
+  st.write(seed_text, num_gen_words, temperature, nucleus_threshold, DBS_diversity_rate, beam_drop_rate, simipen_switch, DBS_Switch, DBW_Switch, beam_width)
 
   ## User has input seed text and click generate button
   if seed_text:
@@ -381,14 +387,14 @@ if user_name:
       ## Save Data to Google Sheet
       log_entry_df = log_user_info(user_name=user_name, user_id=user_id, formatted_datetime=formatted_datetime, tab_id=tab_id, seed_text=seed_text, gen_text1=model1_generated_text, gen_text2=model2_generated_text,
                                    num_gen_words=num_gen_words,temperature=temperature, nucleus_threshold=nucleus_threshold, DBS_diversity_rate=DBS_diversity_rate, beam_drop_rate=beam_drop_rate, simipen_switch=simipen_switch,
-                                   DBW_Switch=DBW_Switch,DBS_Switch=DBS_Switch)
+                                   DBS_Switch=DBS_Switch, DBW_Switch=DBW_Switch, beam_width=beam_width)
       conn = st.connection('gsheets', type=GSheetsConnection)
-      existing_data = conn.read(worksheet='Sheet2', usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16], end='A')
+      existing_data = conn.read(worksheet='Sheet2', usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17], end='A')
       existing_df = pd.DataFrame(existing_data, columns=['Name', 'User_ID', 'Datetime_Entered', 'Tab_ID', 'Seed_Text', 'Gen_Text1', 'Gen_Text2','Num_Gen_Words', 'Temp', 'Nucleus_Threshold','DBS_Diversity_Rate',
-                                                         'DBS_Diversity_Rate','Beam_Drop_Rate','Similarity_Penalty','Dynamic_Beam_Width','Diverse_Beam_Search'])
+                                                         'DBS_Diversity_Rate','Beam_Drop_Rate','Similarity_Penalty','Diverse_Beam_Search','Dynamic_Beam_Width','Beam_Width'])
       combined_df = pd.concat([existing_df, log_entry_df], ignore_index=True)
       conn.update(worksheet='Sheet2', data=combined_df)
       st.cache_data.clear()
-
+: 
 ## Streamlit Tracker End
 streamlit_analytics.stop_tracking(unsafe_password)
