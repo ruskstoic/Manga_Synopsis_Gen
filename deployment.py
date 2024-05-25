@@ -217,9 +217,10 @@ if user_name:
           return ''
         result = []
         capitalize_next = True  # Capitalize the first word
+        first_token_processed = False
     
         for i, token in enumerate(tokens):
-            if len(result) > 0: 
+            if len(result) > 0 or first_token_processed:
                 if token in {'.', '!', '?'}:
                     result[-1] += token  # Append punctuation mark to the previous token
                     capitalize_next = True  # Set flag to capitalize next token
@@ -232,12 +233,15 @@ if user_name:
                     result.append(token)
             else:  # Handling the first token
                 if token in {'.', '!', '?'}:
-                    result.append(token)  # Append punctuation mark to the result
+                    # Directly append punctuation to the seed text later
+                    first_token_processed = True
+                    result.append(token)
                 else:
                     if capitalize_next and token:
                         token = token.capitalize()
                         capitalize_next = False
                     result.append(token)
+                    first_token_processed = True
     
         return ' '.join(result)
         
