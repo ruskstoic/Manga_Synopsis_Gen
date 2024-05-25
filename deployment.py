@@ -122,7 +122,7 @@ if user_name:
   else:
     beam_width = 3
   
-  st.write(seed_text, num_gen_words, temperature, nucleus_threshold, DBS_diversity_rate, beam_drop_rate, simipen_switch, DBS_Switch, DBW_Switch, beam_width)
+  st.write(seed_text, num_gen_words, temperature, nucleus_threshold, DBS_diversity_rate, beam_drop_rate, simipen_switch, DBS_switch, DBW_switch, beam_width)
 
   ## User has input seed text and click generate button
   if seed_text:
