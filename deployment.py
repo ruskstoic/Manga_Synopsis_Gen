@@ -213,6 +213,8 @@ if user_name:
       #Beam Search 1.4 Generator Function
       def join_and_capitalise_tokens(tokens):
         """Join tokens ensuring no space before specified punctuation marks and capitalize first letter after sentence-ending punctuation."""
+        if not tokens:
+          return ''
         result = []
         capitalize_next = True  # Capitalize the first word
     
