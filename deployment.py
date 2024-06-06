@@ -110,16 +110,16 @@ if user_name:
   # User Input Seed Text, Temperature, Num_Gen_Words
   seed_text = str(st.text_area('Input some text here and we will generate a synopsis from this!\n\n'))
   num_gen_words = int(st.slider('Choose the Number of Generated Words You Would Like', 20, 60))
-  temperature = float(st.slider('Choose the Temperature You Would Like (The higher the temperature, the more random the generated words)', 0.3, 2.0))
-  nucleus_threshold = float(st.slider('Choose the Nucleus Threshold You Would Like (Higher values allow more randomness by considering a larger set of probable next words)', 0.5, 1.0))
-  DBS_diversity_rate = float(st.slider('Choose the Diversity Rate You Would Like (Higher values promote diversity by penalizing similar sequences)', 0.3, 1.0))
+  temperature = float(st.slider('Choose the Temperature You Would Like (The higher the temperature, the more random the generated words. We recommend 1.5.)', 0.3, 2.0))
+  nucleus_threshold = float(st.slider('Choose the Nucleus Threshold You Would Like (Higher values allow more randomness by considering a larger set of probable next words. We recommend 0.9.)', 0.5, 1.0))
+  DBS_diversity_rate = float(st.slider('Choose the Diversity Rate You Would Like (Higher values promote diversity by penalizing similar sequences. We recommend 0.7.)', 0.3, 1.0))
   beam_drop_rate = float(st.slider('Choose the Beam Drop Rate You Would Like (Introduces randomness by randomly dropping beams to increase diversity)', 0.0, 0.5))
-  simipen_switch = st.selectbox('Select the Similarity Penalty You Would Like to Apply',
-                                (None,'jaccard', 'levenshtein'))
-  DBS_switch = st.toggle('Activate Diverse Beam Search (Promotes generating varied sequences by penalizing similar beams)')
-  DBW_switch = st.toggle('Activate Dynamic Beam Width (Automatically adjusts beam width based on prediction confidence to balance quality and diversity)')
+  simipen_switch = st.selectbox('Select the Similarity Penalty You Would Like to Apply (Jaccard - reduces word overlap), Levenshtein - reduces similar edits, None - no penalty. We recommend Jaccard.)',
+                                ('jaccard', None, 'levenshtein'))
+  DBS_switch = st.toggle('Activate Diverse Beam Search (Promotes generating varied sequences by penalizing similar beams. We recommend keeping it off until you are more familiar with the app.)')
+  DBW_switch = st.toggle('Activate Dynamic Beam Width (Automatically adjusts beam width based on prediction confidence to balance quality and diversity. We recommend keeping it off until you are more familiar with the app.)')
   if DBW_switch:
-    beam_width = int(st.slider('Choose the Number of Beams You Would Like (More beams means more possibilities, but also longer generation time)', 3, 8))
+    beam_width = int(st.slider('Choose the Number of Beams You Would Like (More beams means more possibilities, but also longer generation time. We recommend 5.)', 3, 8))
   else:
     beam_width = 3
   
@@ -244,28 +244,6 @@ if user_name:
               result.append(token)
       
         return ' ' + ' '.join(result)
-        # result = []
-        # capitalize_next = True  # Capitalize the first word
-    
-        # for i, token in enumerate(tokens):
-        #     if i == 0 and token in {'.', '!', '?'}:
-        #         # If the first token is punctuation, append directly to the seed text
-        #         seed_text += token
-        #         capitalize_next = True
-        #     else:
-        #         if token in {'.', '!', '?'}:
-        #             result[-1] += token  # Append punctuation mark to the previous token
-        #             capitalize_next = True  # Set flag to capitalize next token
-        #         elif token in {',', "'s", "'t", "n't"}:
-        #             result[-1] += token  # Append punctuation mark to the previous token
-        #         else:
-        #             if capitalize_next and token:
-        #                 token = token.capitalize()
-        #                 capitalize_next = False
-        #             result.append(token)
-        # return ' '.join(result)
-      
-        
     
       def calculate_levenshtein_distance(previous_beam, current_beam):
         distance = Levenshtein.distance(previous_beam, current_beam)
@@ -393,7 +371,6 @@ if user_name:
               cooldown_counter -= 1
         # return ' '.join(beams[0][0][seed_text_length:])
         return beams[0][0][seed_text_length:]
-        # return print(seed_text + join_and_capitalise_tokens(beams[0][0][seed_text_length:], seed_text))
                                               
 
       #GF1.4 Generate Text for Model1
@@ -413,7 +390,8 @@ if user_name:
                                        simipen_switch=simipen_switch,
                                       DBS_switch=DBS_switch,
                                         beam_dropping=True)
-      st.success(seed_text + join_and_capitalise_tokens(model1_generated_text, seed_text) + '...')
+      joined_capitalised_gen_text1 = join_and_capitalise_tokens(model1_generated_text, seed_text)
+      st.success(seed_text + joined_capitalised_gen_text1 + '...')
       st.write('Generating text for model2 now...')
 
       #GF1.4 Generate Text for Model1
@@ -432,10 +410,11 @@ if user_name:
                                        simipen_switch=simipen_switch,
                                       DBS_switch=DBS_switch,
                                         beam_dropping=True)
-      st.success(seed_text + join_and_capitalise_tokens(model2_generated_text, seed_text) + '...')
+      joined_capitalised_gen_text2 = join_and_capitalise_tokens(model2_generated_text, seed_text)
+      st.success(seed_text + joined_capitalised_gen_text2 + '...')
   
       ## Save Data to Google Sheet
-      log_entry_df = log_user_info(user_name=user_name, user_id=user_id, formatted_datetime=formatted_datetime, tab_id=tab_id, seed_text=seed_text, gen_text1=(model1_generated_text), gen_text2=join_and_capitalise_tokens(model2_generated_text, seed_text),
+      log_entry_df = log_user_info(user_name=user_name, user_id=user_id, formatted_datetime=formatted_datetime, tab_id=tab_id, seed_text=seed_text, gen_text1=joined_capitalised_gen_text1, gen_text2=joined_capitalised_gen_text2,
                                    num_gen_words=num_gen_words,temperature=temperature, nucleus_threshold=nucleus_threshold, DBS_diversity_rate=DBS_diversity_rate, beam_drop_rate=beam_drop_rate, simipen_switch=simipen_switch,
                                    DBS_switch=DBS_switch, DBW_switch=DBW_switch, beam_width=beam_width)
       conn = st.connection('gsheets', type=GSheetsConnection)
@@ -446,6 +425,9 @@ if user_name:
       combined_df = pd.concat([existing_df, log_entry_df], ignore_index=True)
       conn.update(worksheet='Sheet2', data=combined_df)
       st.cache_data.clear()
+
+      if not joined_capitalised_gen_text1 or not joined_capitalised_gen_text2:
+        st.write('If there is no generated text, please try playing around with the settings or enter another seed text.')
       
 ## Streamlit Tracker End
 streamlit_analytics.stop_tracking(unsafe_password)
