@@ -214,7 +214,7 @@ if user_name:
       def join_and_capitalise_tokens(tokens):
         """Join tokens ensuring no space before specified punctuation marks and capitalize first letter after sentence-ending punctuation."""
         if not tokens:
-          return ''
+          return 'This seed text was unable to produce any output. Please try changing the hyperparameters or changing the seed text.'
         result = []
         capitalize_next = True  # Capitalize the first word
       
@@ -234,12 +234,16 @@ if user_name:
               result.append(token)
           else:
             if token in {'.', '!', '?'}:
-              result.append(token)  # Append punctuation mark to the result
+              seed_text = seed_text.rstrip() + token  # Append punctuation mark to the result
             else:
-              token = token.capitalize()  # Capitalize the first token
+              if capitalize_next:
+                token = token.capitalize()  # Capitalize the first token
+                capitalize_next = False
+              else:
+                token = token.lower()
               result.append(token)
       
-        return ' '.join(result)
+        return seed_text + ' ' + ' '.join(result)
         # result = []
         # capitalize_next = True  # Capitalize the first word
     
