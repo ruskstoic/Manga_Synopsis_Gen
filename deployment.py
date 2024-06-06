@@ -211,7 +211,7 @@ if user_name:
       # st.success(f'Seed Text: {seed_text}\n\nModel Generation: {gen_text}...')
 
       #Beam Search 1.4 Generator Function
-      def join_and_capitalise_tokens(tokens):
+      def join_and_capitalise_tokens(tokens, seed_text):
         """Join tokens ensuring no space before specified punctuation marks and capitalize first letter after sentence-ending punctuation."""
         if not tokens:
           return 'This seed text was unable to produce any output. Please try changing the hyperparameters or changing the seed text.'
@@ -413,7 +413,7 @@ if user_name:
                                        simipen_switch=simipen_switch,
                                       DBS_switch=DBS_switch,
                                         beam_dropping=True)
-      st.success(seed_text + join_and_capitalise_tokens(model1_generated_text) + '...')
+      st.success(seed_text + join_and_capitalise_tokens(model1_generated_text, seed_text) + '...')
       st.write('Generating text for model2 now...')
 
       #GF1.4 Generate Text for Model1
@@ -432,7 +432,7 @@ if user_name:
                                        simipen_switch=simipen_switch,
                                       DBS_switch=DBS_switch,
                                         beam_dropping=True)
-      st.success(seed_text + join_and_capitalise_tokens(model2_generated_text) + '...')
+      st.success(seed_text + join_and_capitalise_tokens(model2_generated_text, seed_text) + '...')
   
       ## Save Data to Google Sheet
       log_entry_df = log_user_info(user_name=user_name, user_id=user_id, formatted_datetime=formatted_datetime, tab_id=tab_id, seed_text=seed_text, gen_text1=(model1_generated_text), gen_text2=join_and_capitalise_tokens(model2_generated_text),
