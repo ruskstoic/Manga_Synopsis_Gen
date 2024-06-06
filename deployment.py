@@ -215,12 +215,40 @@ if user_name:
         """Join tokens ensuring no space before specified punctuation marks and capitalize first letter after sentence-ending punctuation."""
         if not tokens:
           return ''
+        result = []
+        capitalize_next = True  # Capitalize the first word
+      
+        for i, token in enumerate(tokens):
+          if result:
+            if token in {'.', '!', '?'}:
+              result[-1] += token  # Append punctuation mark to the previous token
+              capitalize_next = True  # Set flag to capitalize next token
+            elif token in {',', "'s", "'t", "n't"}:
+              result[-1] += token  # Append punctuation mark to the previous token
+            else:
+              if capitalize_next:
+                token = token.capitalize()  # Capitalize the token after punctuation
+                capitalize_next = False
+              else:
+                token = token.lower()
+              result.append(token)
+          else:
+            if token in {'.', '!', '?'}:
+              result.append(token)  # Append punctuation mark to the result
+            else:
+              token = token.capitalize()  # Capitalize the first token
+              result.append(token)
+      
+        return ' '.join(result)
         # result = []
         # capitalize_next = True  # Capitalize the first word
-        # first_token_processed = False
     
         # for i, token in enumerate(tokens):
-        #     if len(result) > 0 or first_token_processed:
+        #     if i == 0 and token in {'.', '!', '?'}:
+        #         # If the first token is punctuation, append directly to the seed text
+        #         seed_text += token
+        #         capitalize_next = True
+        #     else:
         #         if token in {'.', '!', '?'}:
         #             result[-1] += token  # Append punctuation mark to the previous token
         #             capitalize_next = True  # Set flag to capitalize next token
@@ -231,40 +259,8 @@ if user_name:
         #                 token = token.capitalize()
         #                 capitalize_next = False
         #             result.append(token)
-        #     else:  # Handling the first token
-        #         if token in {'.', '!', '?'}:
-        #             # Directly append punctuation to the seed text later
-        #             first_token_processed = True
-        #             result.append(token)
-        #         else:
-        #             if capitalize_next and token:
-        #                 token = token.capitalize()
-        #                 capitalize_next = False
-        #             result.append(token)
-        #             first_token_processed = True
-    
         # return ' '.join(result)
-        result = []
-        capitalize_next = True  # Capitalize the first word
-    
-        for i, token in enumerate(tokens):
-            if i == 0 and token in {'.', '!', '?'}:
-                # If the first token is punctuation, append directly to the seed text
-                seed_text += token
-                capitalize_next = True
-            else:
-                if token in {'.', '!', '?'}:
-                    result[-1] += token  # Append punctuation mark to the previous token
-                    capitalize_next = True  # Set flag to capitalize next token
-                elif token in {',', "'s", "'t", "n't"}:
-                    result[-1] += token  # Append punctuation mark to the previous token
-                else:
-                    if capitalize_next and token:
-                        token = token.capitalize()
-                        capitalize_next = False
-                    result.append(token)
-    
-        return ' '.join(result)
+      
         
     
       def calculate_levenshtein_distance(previous_beam, current_beam):
