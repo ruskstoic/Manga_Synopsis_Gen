@@ -108,6 +108,7 @@ if user_name:
   formatted_datetime = datetime_entered.strftime(datetime_format)
 
   # User Input Seed Text, Temperature, Num_Gen_Words
+  seed_text = str(st.text_area('Input some text here and we will generate a synopsis from this!\n\n'))
   num_gen_words = int(st.slider('Choose the Number of Generated Words You Would Like', 20, 60))
   temperature = float(st.slider('Choose the Temperature You Would Like (The higher the temperature, the more random the generated words. We recommend 1.5.)', 0.3, 2.0))
   nucleus_threshold = float(st.slider('Choose the Nucleus Threshold You Would Like (Higher values allow more randomness by considering a larger set of probable next words. We recommend 0.9.)', 0.5, 1.0))
@@ -122,7 +123,6 @@ if user_name:
   else:
     beam_width = 3
     
-  seed_text = str(st.text_area('Input some text here and we will generate a synopsis from this!\n\n'))
   st.write(seed_text, num_gen_words, temperature, nucleus_threshold, DBS_diversity_rate, beam_drop_rate, simipen_switch, DBS_switch, DBW_switch, beam_width)
 
   ## User has input seed text and click generate button
