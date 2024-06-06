@@ -110,8 +110,8 @@ if user_name:
   # User Input Seed Text, Temperature, Num_Gen_Words
   seed_text = str(st.text_area('Input some text here and we will generate a synopsis from this!\n\n'))
   num_gen_words = int(st.slider('Choose the Number of Generated Words You Would Like', 20, 60))
-  temperature = float(st.slider('Choose the Temperature You Would Like (The higher the temperature, the more random the generated words)', 0.3, 1.0))
-  nucleus_threshold = float(st.slider('Choose the Nucleus Threshold You Would Like (Higher values allow more randomness by considering a larger set of probable next words)', 0.5, 1.5))
+  temperature = float(st.slider('Choose the Temperature You Would Like (The higher the temperature, the more random the generated words)', 0.3, 2.0))
+  nucleus_threshold = float(st.slider('Choose the Nucleus Threshold You Would Like (Higher values allow more randomness by considering a larger set of probable next words)', 0.5, 1.0))
   DBS_diversity_rate = float(st.slider('Choose the Diversity Rate You Would Like (Higher values promote diversity by penalizing similar sequences)', 0.3, 1.0))
   beam_drop_rate = float(st.slider('Choose the Beam Drop Rate You Would Like (Introduces randomness by randomly dropping beams to increase diversity)', 0.0, 0.5))
   simipen_switch = st.selectbox('Select the Similarity Penalty You Would Like to Apply',
