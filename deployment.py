@@ -211,7 +211,7 @@ if user_name:
       # st.success(f'Seed Text: {seed_text}\n\nModel Generation: {gen_text}...')
 
       #Beam Search 1.4 Generator Function
-      def join_and_capitalise_tokens(tokens):
+      def join_and_capitalise_tokens(tokens, seed_text):
         """Join tokens ensuring no space before specified punctuation marks and capitalize first letter after sentence-ending punctuation."""
         if not tokens:
           return 'This seed text was unable to produce any output. Please try changing the hyperparameters or changing the seed text.'
@@ -393,6 +393,8 @@ if user_name:
               cooldown_counter -= 1
         # return ' '.join(beams[0][0][seed_text_length:])
         return beams[0][0][seed_text_length:]
+        return print(seed_text + join_and_capitalise_tokens(beams[0][0][seed_text_length:], seed_text))
+                                              
 
       #GF1.4 Generate Text for Model1
       filter_size = 10 #changeable parameter
