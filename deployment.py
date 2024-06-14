@@ -91,6 +91,9 @@ service = build('drive', 'v3', credentials=credentials)
 
 ## Streamlit Interface
 st.title('Shall We Generate A Never-Before-Seen Manga Synopsis?')
+st.subheader("Model Disclaimer: Work in Progress 🚧\n\nOur model is in its early stages and is continuously undergoing training and improvements. \
+Please note that it's a beginner model, and while it shows promising results, it is not perfect. We appreciate your understanding as we strive to enhance its performance over time. \
+\n\nCurrently we are on our 2nd model, and we will be using all 2 models to predict for you.")
 user_name = st.text_input('Hello! What is your name?')
 
 ## Start User Pipeline
