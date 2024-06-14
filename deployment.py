@@ -148,9 +148,9 @@ if user_name:
         # if destination[0:5:-1] == 'pickle':
       
       #Download, Save, Load 1st Model (4.400epoch21) from Google Drive
-      model1_4o400epoch21_id = '1-R3xMvkZMS7fruMxV-zCCABxiWkmHsP4'
+      model1_4o402epoch52_id = '12GdSdKOyIkYVSWErnYKKgKWwog14eJOG'
       temp_model1_filepath = '/tmp/model1.keras'
-      download_file(file_id=model1_4o400epoch21_id, destination=temp_model1_filepath, filename='Model1')
+      download_file(file_id=model1_4o402epoch52_id, destination=temp_model1_filepath, filename='Model1')
       model1 = tf.keras.models.load_model(temp_model1_filepath)
       st.success('Model1 file loaded successfully!')
         #Get 1st Tokenizer from Google Drive
