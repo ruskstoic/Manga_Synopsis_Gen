@@ -1,6 +1,6 @@
-streamlit==1.22.0
-pandas==2.0
-numpy==1.26.4
+streamlit
+pandas
+numpy
 uuid
 tensorflow
 requests
