@@ -153,6 +153,27 @@ if user_name:
       temp_model1_filepath = '/tmp/model1.keras'
       download_file(file_id=model1_4o402epoch52_id, destination=temp_model1_filepath, filename='Model1')
       # model1 = tf.keras.models.load_model(temp_model1_filepath)
+      try:
+        with open(temp_model1_filepath, 'r') as f:
+            model_config = f.read()
+    
+        model_config = json.loads(model_config)
+        for layer in model_config['config']['layers']:
+            if 'batch_shape' in layer['config']:
+                del layer['config']['batch_shape']
+    
+        with open('/tmp/modified_model_config.json', 'w') as f:
+            json.dump(model_config, f)
+    
+        with open('/tmp/modified_model_config.json', 'r') as f:
+            modified_model_config = f.read()
+    
+        model1 = tf.keras.models.model_from_json(modified_model_config, custom_objects={'dtype': 'float32'})
+        st.success('Model1 file loaded successfully!')
+      except TypeError as te:
+          st.error(f"TypeError while loading model: {te}")
+      except Exception as e:
+          st.error(f"Unexpected error while loading model: {e}")
       model1 = tf.keras.models.load_model(temp_model1_filepath, custom_objects={'dtype': 'float32'})
       st.success('Model1 file loaded successfully!')
         #Get 1st Tokenizer from Google Drive
