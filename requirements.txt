@@ -2,7 +2,7 @@ streamlit==1.35.0
 pandas
 numpy
 uuid
-tensorflow==2.15.0
+tensorflow==2.16.1
 tf-keras
 transformers==4.16.2
 requests
