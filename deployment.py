@@ -23,6 +23,7 @@ from google.oauth2 import service_account
 from datetime import datetime, timedelta
 import pytz
 import tensorflow as tf
+from transformers import GPT2Tokenizer, TFGPT2LMHeadModel
 import pickle
 import io
 import tempfile
