@@ -3,7 +3,7 @@ pandas
 numpy
 uuid
 tensorflow
-transformers
+transformers==4.16.2
 requests
 st-gsheets-connection
 streamlit-analytics
