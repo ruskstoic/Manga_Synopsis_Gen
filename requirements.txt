@@ -2,7 +2,7 @@ streamlit==1.35.0
 pandas
 numpy
 uuid
-tensorflow
+tensorflow==2.15.0
 transformers==4.16.2
 requests
 st-gsheets-connection
