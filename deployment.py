@@ -1,3 +1,6 @@
+# Set the environment variable to use legacy Keras
+os.environ["TF_USE_LEGACY_KERAS"] = "1"
+
 ## Import
 import sys
 import os
@@ -23,6 +26,7 @@ from google.oauth2 import service_account
 from datetime import datetime, timedelta
 import pytz
 import tensorflow as tf
+import tf_keras as keras
 from transformers import GPT2Tokenizer, TFGPT2LMHeadModel
 import pickle
 import io
