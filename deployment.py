@@ -180,44 +180,17 @@ if user_name:
       with open(temp_tokenizer2_filepath, 'rb') as handle:
         loaded_tokenizer2 = pickle.load(handle)
       st.success('Tokenizer2 file loaded successfully!')
+
+      #Download, Save, Load 3rd Model (8.002epoch3) from Google Drive
+      model3_7o002epoch3_id = '1oYL1cXaT1vrEiQzfSu23MzG3S2Wu-2zV'
+      temp_model3_filepath = '/tmp/model3'
+      download_file(file_id=model3_7o002epoch3_id, destination=temp_model3_filepath, filename='Model3')
+      model3 = TFGPT2LMHeadModel.from_pretrained(temp_model3_filepath)
+      st.success('Model3 file loaded successfully!')
+        #Get 3rd Tokenizer from Transformers Package
+      loaded_tokenizer3 = GPT2Tokenizer.from_pretrained('gpt2', pad_token='<|endoftext|>')
+      st.success('Tokenizer3 file loaded successfully!')
       st.write('Generating text for model1 now...')
-  
-      #Simple Generator Function
-      # def generate_text(model, tokenizer, seq_len, seed_text, num_gen_words, temperature):
-      #   output_text = []
-      #   input_text = seed_text
-      #   prev_pred_word_idx = 0
-    
-      #   for i in range(num_gen_words-1):
-      #     encoded_text = tokenizer.texts_to_sequences([input_text])[0]
-      #     pad_encoded = pad_sequences([encoded_text], maxlen=seq_len, truncating='pre', dtype='float32') #expects a list of sequences
-      #     pad_encoded = np.array(pad_encoded)
-      #     pred_distribution = model.predict(pad_encoded, verbose=0)[0][-1]
-      
-      #     #Temperature parameter
-      #     new_pred_distribution = np.power(pred_distribution, (1/temperature))
-      #     new_pred_distribution[prev_pred_word_idx] = 0 #prevents previous word from being next word
-      #     new_pred_distribution = new_pred_distribution / new_pred_distribution.sum()
-
-      #     #Choose word with highest probability as next word
-      #     choices = range(new_pred_distribution.size)
-      #     pred_word_idx = np.random.choice(a=choices, p=new_pred_distribution) #randomly chooses word
-      #     # pred_word_idx = np.argmax(new_pred_distribution) #choose max probability word
-      #     prev_pred_word_idx = pred_word_idx
-      #     pred_word = tokenizer.index_word.get(pred_word_idx, '')
-      #     input_text += ' ' + pred_word
-      #     output_text.append(pred_word)
-      #   return ' '.join(output_text)
-
-      #Generate Synopsis and Show Result
-      # filter_size = 10 #changeable parameter
-      # gen_text = generate_text(model = model1,
-      #                             tokenizer = loaded_tokenizer,
-      #                             seq_len = filter_size, # why does -1 work also
-      #                             seed_text = seed_text,
-      #                             num_gen_words = num_gen_words,
-      #                             temperature = temperature)
-      # st.success(f'Seed Text: {seed_text}\n\nModel Generation: {gen_text}...')
 
       #Beam Search 1.4 Generator Function
       def join_and_capitalise_tokens(tokens, seed_text):
