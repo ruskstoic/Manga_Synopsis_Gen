@@ -26,7 +26,7 @@ from google.oauth2 import service_account
 from datetime import datetime, timedelta
 import pytz
 import tensorflow as tf
-import tf_keras as keras
+import keras
 from transformers import GPT2Tokenizer, TFGPT2LMHeadModel
 import pickle
 import io
