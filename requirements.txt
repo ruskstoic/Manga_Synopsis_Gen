@@ -3,8 +3,8 @@ pandas
 numpy
 uuid
 tensorflow==2.16.1
-tf-keras
-transformers==4.16.2
+tf-keras~=2.16.0
+transformers
 requests
 st-gsheets-connection
 streamlit-analytics
