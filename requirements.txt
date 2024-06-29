@@ -3,7 +3,6 @@ pandas
 numpy
 uuid
 tensorflow
-tf-keras~=2.16.0
 transformers
 requests
 st-gsheets-connection
