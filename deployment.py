@@ -1,6 +1,6 @@
-# import os
+import os
 # # Set the environment variable to use legacy Keras
-# os.environ["TF_USE_LEGACY_KERAS"] = "1"
+os.environ["TF_USE_LEGACY_KERAS"] = "1"
 
 ## Import
 import sys
