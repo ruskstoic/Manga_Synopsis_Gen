@@ -32,6 +32,7 @@ from transformers import GPT2Tokenizer, TFGPT2LMHeadModel
 import pickle
 import io
 import tempfile
+import zipfile
 import requests
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -181,11 +182,19 @@ if user_name:
         loaded_tokenizer2 = pickle.load(handle)
       st.success('Tokenizer2 file loaded successfully!')
 
-      #Download, Save, Load 3rd Model (8.002epoch3) from Google Drive
-      model3_7o002epoch3_id = '1oYL1cXaT1vrEiQzfSu23MzG3S2Wu-2zV'
-      temp_model3_filepath = '/tmp/model3'
-      download_file(file_id=model3_7o002epoch3_id, destination=temp_model3_filepath, filename='Model3')
-      model3 = TFGPT2LMHeadModel.from_pretrained(temp_model3_filepath)
+      #Download, Save, Load 3rd Model (8.002epoch3) from Google Drive using Zip
+      model3_8o002epoch3_id = '1I10F5N23BwcDXKB_DSZu4NkgOhkkn7xe'
+      temp_model3_filepath = '/tmp/model3zip'
+      download_file(file_id=model3_8o002epoch3_id, destination=temp_model3_filepath, filename='Model3zip')
+        #Load Model from Zipped Folder Function
+      def load_model_from_zip(zip_file_path):
+        # Create a temporary directory and extract the zip file there
+        with tempfile.TemporaryDirectory() as temp_dir:
+          with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+            zip_ref.extractall(temp_dir)
+          model = TFGPT2LMHeadModel.from_pretrained(temp_dir)
+          return model
+      model3 = load_model_from_zip(temp_model3_filepath)
       st.success('Model3 file loaded successfully!')
         #Get 3rd Tokenizer from Transformers Package
       loaded_tokenizer3 = GPT2Tokenizer.from_pretrained('gpt2', pad_token='<|endoftext|>')
