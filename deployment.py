@@ -27,7 +27,7 @@ from datetime import datetime, timedelta
 import pytz
 import tensorflow as tf
 # import tf_keras as keras
-import keras
+# import keras
 from transformers import GPT2Tokenizer, TFGPT2LMHeadModel
 import pickle
 import io
@@ -64,7 +64,7 @@ def get_or_create_tab_ID():
   return st.session_state.tab_id
 
 #Function to compile user info
-def log_user_info(user_name, user_id, formatted_datetime, tab_id, seed_text, gen_text1, gen_text2, num_gen_words, temperature, nucleus_threshold, DBS_diversity_rate, beam_drop_rate, simipen_switch,
+def log_user_info(user_name, user_id, formatted_datetime, tab_id, seed_text, gen_text1, gen_text2, gen_text3, num_gen_words, temperature, nucleus_threshold, DBS_diversity_rate, beam_drop_rate, simipen_switch,
                   DBS_switch, DBW_switch, beam_width):
   user_info = {'Name': user_name,
                'User_ID': user_id,
@@ -73,6 +73,7 @@ def log_user_info(user_name, user_id, formatted_datetime, tab_id, seed_text, gen
                'Seed_Text': seed_text,
                'Gen_Text1': gen_text1,
                'Gen_Text2': gen_text2,
+               'Gen_Text3': gen_text3,
                'Num_Gen_Words': num_gen_words,
                'Temp': temperature,
                'Nucleus_Threshold': nucleus_threshold,
@@ -100,7 +101,7 @@ service = build('drive', 'v3', credentials=credentials)
 st.title('Shall We Generate A Never-Before-Seen Manga Synopsis?')
 st.subheader("Model Disclaimer: Work in Progress 🚧\n\nOur model is in its early stages and is continuously undergoing training and improvements. \
 Please note that it's a beginner model, and while it shows promising results, it is not perfect. We appreciate your understanding as we strive to enhance its performance over time. \
-\n\nCurrently we are on our 2nd model, and we will be using all 2 models to predict for you.")
+\n\nCurrently we are on our 3rd model, and we will be using all 3 models to predict for you, so you can choose whichever result matches what you want the most.")
 user_name = st.text_input('Hello! What is your name?')
 
 ## Start User Pipeline
@@ -272,7 +273,8 @@ if user_name:
                                              DBW_switch=False,
                                              simipen_switch=False,
                                               DBS_switch=False,
-                                              beam_dropping=True):
+                                              beam_dropping=True,
+                                             gpt2_switch=False):
       
         output_text = []
         previous_beam = [] ##similarity penalty
@@ -295,10 +297,22 @@ if user_name:
           new_beams = []
           for beam in beams:
             input_text, beam_prob = beam
-            encoded_text = tokenizer.texts_to_sequences([input_text])[0]
-            pad_encoded = pad_sequences([encoded_text], maxlen=seq_len, truncating='pre', dtype='float32')
-            pad_encoded = np.array(pad_encoded)
-            pred_distribution = model.predict(pad_encoded, verbose=0)[0][-1] #Add [-1] for LSTM1.1 only
+            if gpt2_switch:
+              input_text = ' '.join(input_text)
+              encoded_text = tokenizer.encode(input_text, return_tensors='tf')
+              pred_distribution = model(encoded_text)
+              pred_distribution = pred_distribution.logits[:, -1, :] / temperature  # Use the last token's distribution
+              pred_distribution = tf.nn.softmax(pred_distribution, axis=-1).numpy()
+              pred_distribution = pred_distribution[0]
+            else:
+              encoded_text = tokenizer.texts_to_sequences([input_text])[0]
+              pad_encoded = pad_sequences([encoded_text], maxlen=seq_len, truncating='pre', dtype='float32')
+              pad_encoded = np.array(pad_encoded)
+              pred_distribution = model.predict(pad_encoded, verbose=0)[0][-1] #Add [-1] for LSTM1.1 only
+            # encoded_text = tokenizer.texts_to_sequences([input_text])[0]
+            # pad_encoded = pad_sequences([encoded_text], maxlen=seq_len, truncating='pre', dtype='float32')
+            # pad_encoded = np.array(pad_encoded)
+            # pred_distribution = model.predict(pad_encoded, verbose=0)[0][-1] #Add [-1] for LSTM1.1 only
       
             #Temperature Parameter
             adjusted_distribution = np.power(pred_distribution, (1/temperature))
@@ -307,19 +321,39 @@ if user_name:
             #Use Nucleus Sampling and Similarity Penalty
             selected_indices = nucleus_sampling(adjusted_distribution, threshold=nucleus_threshold)
             for index in selected_indices:
-              next_word = tokenizer.index_word.get(index, '')
-              if next_word != input_text[-1]: #Ensure no same words are consecutive
-                new_text = ' '.join(input_text + [next_word])
+              if gpt2_switch:
+                next_word = tokenizer.decode([index], skip_special_tokens=True).strip()
+                if next_word != input_text[-1]: #Ensure no same words are consecutive
+                  new_text = input_text + ' ' + next_word
+              else:
+                next_word = tokenizer.index_word.get(index, '')
+                if next_word != input_text[-1]: #Ensure no same words are consecutive
+                  new_text = ' '.join(input_text + [next_word])
+      
+              new_prob = beam_prob * adjusted_distribution[index]
+              if previous_beam and simipen_switch == 'jaccard':
+                similarity = calculate_jaccard_similarity(previous_beam, beam[0]) ##similarity penalty
+                new_prob = new_prob * (1 - similarity) ##similarity penalty
+              elif previous_beam and simipen_switch == 'levenshtein':
+                similarity = calculate_levenshtein_distance(previous_beam, beam[0]) ##similarity penalty
+                new_prob = new_prob * (1 - similarity) ##similarity penalty
+              else:
                 new_prob = beam_prob * adjusted_distribution[index]
-                if previous_beam and simipen_switch == 'jaccard':
-                  similarity = calculate_jaccard_similarity(previous_beam, beam[0]) ##similarity penalty
-                  new_prob = new_prob * (1 - similarity) ##similarity penalty
-                elif previous_beam and simipen_switch == 'levenshtein':
-                  similarity = calculate_levenshtein_distance(previous_beam, beam[0]) ##similarity penalty
-                  new_prob = new_prob * (1 - similarity) ##similarity penalty
-                else:
-                  new_prob = beam_prob * adjusted_distribution[index]
-                new_beams.append((new_text.split(), new_prob))
+              new_beams.append((new_text.split(), new_prob))
+              
+              # next_word = tokenizer.index_word.get(index, '')
+              # if next_word != input_text[-1]: #Ensure no same words are consecutive
+              #   new_text = ' '.join(input_text + [next_word])
+              #   new_prob = beam_prob * adjusted_distribution[index]
+              #   if previous_beam and simipen_switch == 'jaccard':
+              #     similarity = calculate_jaccard_similarity(previous_beam, beam[0]) ##similarity penalty
+              #     new_prob = new_prob * (1 - similarity) ##similarity penalty
+              #   elif previous_beam and simipen_switch == 'levenshtein':
+              #     similarity = calculate_levenshtein_distance(previous_beam, beam[0]) ##similarity penalty
+              #     new_prob = new_prob * (1 - similarity) ##similarity penalty
+              #   else:
+              #     new_prob = beam_prob * adjusted_distribution[index]
+              #   new_beams.append((new_text.split(), new_prob))
       
             #Random Beam Dropping, shift tabbed in once
             if beam_dropping:
@@ -380,12 +414,13 @@ if user_name:
                                        DBW_switch=DBW_switch,
                                        simipen_switch=simipen_switch,
                                       DBS_switch=DBS_switch,
-                                        beam_dropping=True)
+                                        beam_dropping=True,
+                                        gpt2_switch=False)
       joined_capitalised_gen_text1 = join_and_capitalise_tokens(model1_generated_text, seed_text)
       st.success(seed_text + joined_capitalised_gen_text1 + '...')
       st.write('Generating text for model2 now...')
 
-      #GF1.4 Generate Text for Model1
+      #GF1.4 Generate Text for Model2
       model2_generated_text = v1o4_diverse_beam_search_generation(model = model2,
                                        tokenizer = loaded_tokenizer2,
                                        seq_len = filter_size,
@@ -400,18 +435,39 @@ if user_name:
                                        DBW_switch=DBW_switch,
                                        simipen_switch=simipen_switch,
                                       DBS_switch=DBS_switch,
-                                        beam_dropping=True)
+                                        beam_dropping=True,
+                                        gpt2_switch=False)
       joined_capitalised_gen_text2 = join_and_capitalise_tokens(model2_generated_text, seed_text)
       st.success(seed_text + joined_capitalised_gen_text2 + '...')
+
+      #GF1.4 Generate Text for Model3
+      model3_generated_text = v1o4_diverse_beam_search_generation(model = model3,
+                                       tokenizer = loaded_tokenizer3,
+                                       seq_len = filter_size,
+                                       seed_text = seed_text,
+                                       beam_width = beam_width,
+                                       num_gen_words = num_gen_words,
+                                       temperature = temperature,
+                                       nucleus_threshold = nucleus_threshold,
+                                       DBW_probability_threshold = 0.0000004,
+                                      DBS_num_comparisons = 10, #10 is good because more means more variation that might not make sense
+                                       DBS_diversity_rate = DBS_diversity_rate,
+                                       DBW_switch=DBW_switch,
+                                       simipen_switch=simipen_switch,
+                                      DBS_switch=DBS_switch,
+                                        beam_dropping=True,
+                                        gpt2_switch=True)
+      joined_capitalised_gen_text3 = join_and_capitalise_tokens(model3_generated_text, seed_text)
+      st.success(seed_text + joined_capitalised_gen_text3 + '...')
   
       ## Save Data to Google Sheet
       log_entry_df = log_user_info(user_name=user_name, user_id=user_id, formatted_datetime=formatted_datetime, tab_id=tab_id, seed_text=seed_text, gen_text1=joined_capitalised_gen_text1, gen_text2=joined_capitalised_gen_text2,
-                                   num_gen_words=num_gen_words,temperature=temperature, nucleus_threshold=nucleus_threshold, DBS_diversity_rate=DBS_diversity_rate, beam_drop_rate=beam_drop_rate, simipen_switch=simipen_switch,
-                                   DBS_switch=DBS_switch, DBW_switch=DBW_switch, beam_width=beam_width)
+                                   gen_text3=joined_capitalised_gen_text3, num_gen_words=num_gen_words,temperature=temperature, nucleus_threshold=nucleus_threshold, DBS_diversity_rate=DBS_diversity_rate, beam_drop_rate=beam_drop_rate,
+                                   simipen_switch=simipen_switch, DBS_switch=DBS_switch, DBW_switch=DBW_switch, beam_width=beam_width)
       conn = st.connection('gsheets', type=GSheetsConnection)
       # conn.update(worksheet='Sheet2', data=log_entry_df) ##Swap with below to reset and append one row to sheets
-      existing_data = conn.read(worksheet='Sheet2', usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], end='A')
-      existing_df = pd.DataFrame(existing_data, columns=['Name', 'User_ID', 'Datetime_Entered', 'Tab_ID', 'Seed_Text', 'Gen_Text1', 'Gen_Text2','Num_Gen_Words', 'Temp', 'Nucleus_Threshold','DBS_Diversity_Rate',
+      existing_data = conn.read(worksheet='Sheet2', usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16], end='A')
+      existing_df = pd.DataFrame(existing_data, columns=['Name', 'User_ID', 'Datetime_Entered', 'Tab_ID', 'Seed_Text', 'Gen_Text1', 'Gen_Text2','Gen_Text3', 'Num_Gen_Words', 'Temp', 'Nucleus_Threshold','DBS_Diversity_Rate',
                                                          'Beam_Drop_Rate','Similarity_Penalty','Diverse_Beam_Search','Dynamic_Beam_Width','Beam_Width'])
       combined_df = pd.concat([existing_df, log_entry_df], ignore_index=True)
       conn.update(worksheet='Sheet2', data=combined_df)
