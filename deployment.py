@@ -417,7 +417,7 @@ if user_name:
                                         beam_dropping=True,
                                         gpt2_switch=False)
       joined_capitalised_gen_text1 = join_and_capitalise_tokens(model1_generated_text, seed_text)
-      st.success(seed_text + joined_capitalised_gen_text1 + '...')
+      st.success('Model1 Generation:\n\n' + seed_text + joined_capitalised_gen_text1 + '...')
       st.write('Generating text for model2 now...')
 
       #GF1.4 Generate Text for Model2
@@ -438,7 +438,8 @@ if user_name:
                                         beam_dropping=True,
                                         gpt2_switch=False)
       joined_capitalised_gen_text2 = join_and_capitalise_tokens(model2_generated_text, seed_text)
-      st.success(seed_text + joined_capitalised_gen_text2 + '...')
+      st.success('Model2 Generation:\n\n' + seed_text + joined_capitalised_gen_text2 + '...')
+      st.write('Generating text for model3 now...')
 
       #GF1.4 Generate Text for Model3
       model3_generated_text = v1o4_diverse_beam_search_generation(model = model3,
@@ -458,7 +459,7 @@ if user_name:
                                         beam_dropping=True,
                                         gpt2_switch=True)
       joined_capitalised_gen_text3 = join_and_capitalise_tokens(model3_generated_text, seed_text)
-      st.success(seed_text + joined_capitalised_gen_text3 + '...')
+      st.success('Model3 Generation:\n\n' + seed_text + joined_capitalised_gen_text3 + '...')
   
       ## Save Data to Google Sheet
       log_entry_df = log_user_info(user_name=user_name, user_id=user_id, formatted_datetime=formatted_datetime, tab_id=tab_id, seed_text=seed_text, gen_text1=joined_capitalised_gen_text1, gen_text2=joined_capitalised_gen_text2,
