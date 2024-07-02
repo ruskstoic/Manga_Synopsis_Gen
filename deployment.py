@@ -119,11 +119,11 @@ if user_name:
   formatted_datetime = datetime_entered.strftime(datetime_format)
 
   # User Input Seed Text, Temperature, Num_Gen_Words
-  seed_text = str(st.text_area('Input some text here and we will generate a synopsis from this!\n\n'))
-  num_gen_words = int(st.slider('Choose the Number of Generated Words You Would Like', 20, 60))
-  temperature = float(st.slider('Choose the Temperature You Would Like (The higher the temperature, the more random the generated words. We recommend 1.5.)', 0.3, 2.0))
-  nucleus_threshold = float(st.slider('Choose the Nucleus Threshold You Would Like (Higher values allow more randomness by considering a larger set of probable next words. We recommend 0.9.)', 0.5, 1.0))
-  DBS_diversity_rate = float(st.slider('Choose the Diversity Rate You Would Like (Higher values promote diversity by penalizing similar sequences. We recommend 0.7.)', 0.3, 1.0))
+  seed_text = str(st.text_area('Input some text here and we will generate a synopsis from this!\n\n(NOTE: Please "Ctrl Enter" your text before adjusting the hyperparameters below to avoid losing your test.)'))
+  num_gen_words = int(st.slider('Choose the Number of Generated Words You Would Like', 20, 60, value=40))
+  temperature = float(st.slider('Choose the Temperature You Would Like (The higher the temperature, the more random the generated words. We recommend 1.5.)', 0.3, 2.0, value=1.5))
+  nucleus_threshold = float(st.slider('Choose the Nucleus Threshold You Would Like (Higher values allow more randomness by considering a larger set of probable next words. We recommend 0.9.)', 0.5, 1.0, value=0.9))
+  DBS_diversity_rate = float(st.slider('Choose the Diversity Rate You Would Like (Higher values promote diversity by penalizing similar sequences. We recommend 0.7.)', 0.3, 1.0, value=0.7))
   beam_drop_rate = float(st.slider('Choose the Beam Drop Rate You Would Like (Introduces randomness by randomly dropping beams to increase diversity)', 0.0, 0.5))
   simipen_switch = st.selectbox('Select the Similarity Penalty You Would Like to Apply (Jaccard - reduces word overlap), Levenshtein - reduces similar edits, None - no penalty. We recommend Jaccard.)',
                                 ('jaccard', None, 'levenshtein'))
@@ -186,7 +186,7 @@ if user_name:
       #Download, Save, Load 3rd Model (8.002epoch3) from Google Drive using Zip
       model3_8o002epoch3_id = '1I10F5N23BwcDXKB_DSZu4NkgOhkkn7xe'
       temp_model3_filepath = '/tmp/model3zip'
-      download_file(file_id=model3_8o002epoch3_id, destination=temp_model3_filepath, filename='Model3zip')
+      download_file(file_id=model3_8o002epoch3_id, destination=temp_model3_filepath, filename='Model3')
         #Load Model from Zipped Folder Function
       def load_model_from_zip(zip_file_path):
         # Create a temporary directory and extract the zip file there
@@ -206,7 +206,7 @@ if user_name:
       def join_and_capitalise_tokens(tokens, seed_text):
         """Join tokens ensuring no space before specified punctuation marks and capitalize first letter after sentence-ending punctuation."""
         if not tokens:
-          return 'This seed text was unable to produce any output. Please try changing the hyperparameters or changing the seed text.'
+          return '\n\nUnfortunately, this seed text was unable to produce any output. Please try changing the hyperparameters or changing the seed text.'
         result = []
         capitalize_next = True  # Capitalize the first word
       
