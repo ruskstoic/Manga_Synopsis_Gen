@@ -136,7 +136,7 @@ if user_name:
   
   # Buttons to randomize or reset hyperparameters
   st.button('Randomise', help='Click me to Randomise Hyperparameter Values!', on_click=randomize_hyperparameters)
-  st.button('Reset', help='Reset to Recommended Hyperparameter Values!', on_click=reset_hyperparameters)
+  st.button('Reset', help='Click me Reset to Recommended Hyperparameter Values!', on_click=reset_hyperparameters)
 
   # User Input Seed Text, Temperature, Num_Gen_Words...
   if st.session_state.reset or not st.session_state.randomise:
