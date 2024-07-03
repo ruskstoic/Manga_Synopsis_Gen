@@ -118,7 +118,7 @@ if user_name:
   datetime_entered = datetime.now(converted_timezone)
   formatted_datetime = datetime_entered.strftime(datetime_format)
 
-  # Define the state variables
+  # Define the state variables of Randomise and Reset
   if 'randomise' not in st.session_state:
       st.session_state.randomise = False
   if 'reset' not in st.session_state:
@@ -133,10 +133,6 @@ if user_name:
   def reset_hyperparameters():
       st.session_state.randomise = False
       st.session_state.reset = True
-  
-  # Buttons to randomize or reset hyperparameters
-  st.button('Randomise', help='Click me to Randomise Hyperparameter Values!', on_click=randomize_hyperparameters)
-  st.button('Reset', help='Click me Reset to Recommended Hyperparameter Values!', on_click=reset_hyperparameters)
 
   # User Input Seed Text, Temperature, Num_Gen_Words...
   if st.session_state.reset or not st.session_state.randomise:
@@ -171,6 +167,10 @@ if user_name:
       beam_width = int(st.slider('Choose the Number of Beams You Would Like (More beams means more possibilities, but also longer generation time. We recommend 5.)', 3, 8, value=random.randint(3,8)))
     else:
       beam_width = 3
+
+  # Buttons to randomize or reset hyperparameters
+  st.button('Randomise', help='Click me to Randomise Hyperparameter Values!', on_click=randomize_hyperparameters)
+  st.button('Reset', help='Click me Reset to Recommended Hyperparameter Values!', on_click=reset_hyperparameters)
   
   # Reset the state variables after setting the hyperparameters
   st.session_state.randomise = False
