@@ -170,7 +170,7 @@ if user_name:
 
   # Buttons to randomize or reset hyperparameters
   st.button('Randomise', help='Click me to Randomise Hyperparameter Values!', on_click=randomize_hyperparameters)
-  st.button('Reset', help='Click me Reset to Recommended Hyperparameter Values!', on_click=reset_hyperparameters)
+  st.button('Reset', help='Click me to Reset to Recommended Hyperparameter Values!', on_click=reset_hyperparameters)
   
   # Reset the state variables after setting the hyperparameters
   st.session_state.randomise = False
