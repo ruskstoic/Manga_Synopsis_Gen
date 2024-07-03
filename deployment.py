@@ -118,70 +118,48 @@ if user_name:
   datetime_entered = datetime.now(converted_timezone)
   formatted_datetime = datetime_entered.strftime(datetime_format)
 
+  randomise = False
+  reset = False
   # User Input Seed Text, Temperature, Num_Gen_Words...
-  seed_text = str(st.text_area('Input some text here and we will generate a synopsis from this!\n\n(NOTE: Please "Ctrl Enter" your text before adjusting the hyperparameters below to avoid losing your test.)'))
-  num_gen_words = int(st.slider('Choose the Number of Generated Words You Would Like', 20, 60, value=40))
-  temperature = float(st.slider('Choose the Temperature You Would Like (The higher the temperature, the more random the generated words. We recommend 1.5.)', 0.3, 2.0, value=1.5))
-  nucleus_threshold = float(st.slider('Choose the Nucleus Threshold You Would Like (Higher values allow more randomness by considering a larger set of probable next words. We recommend 0.9.)', 0.5, 1.0, value=0.9))
-  DBS_diversity_rate = float(st.slider('Choose the Diversity Rate You Would Like (Higher values promote diversity by penalizing similar sequences. We recommend 0.7.)', 0.3, 1.0, value=0.7))
-  beam_drop_rate = float(st.slider('Choose the Beam Drop Rate You Would Like (Introduces randomness by randomly dropping beams to increase diversity)', 0.0, 0.5))
-  simipen_switch = st.selectbox('Select the Similarity Penalty You Would Like to Apply (Jaccard - reduces word overlap), Levenshtein - reduces similar edits, None - no penalty. We recommend Jaccard.)',
-                                ('jaccard', None, 'levenshtein'))
-  DBS_switch = st.toggle('Activate Diverse Beam Search (Promotes generating varied sequences by penalizing similar beams. We recommend keeping it off until you are more familiar with the app.)')
-  DBW_switch = st.toggle('Activate Dynamic Beam Width (Automatically adjusts beam width based on prediction confidence to balance quality and diversity. We recommend keeping it off until you are more familiar with the app.)')
-  if DBW_switch:
-    beam_width = int(st.slider('Choose the Number of Beams You Would Like (More beams means more possibilities, but also longer generation time. We recommend 5.)', 3, 8))
-  else:
-    beam_width = 3
-
-  if st.button('Randomise', help='Click me to Randomise Hyperparameter Values!'):
-    #Create Randomised Values
-    random_num_gen_words = random.randint(20,60)
-    random_temperature = round(random.uniform(0.3, 2.0), 2)
-    random_nucleus_threshold = round(random.uniform(0.5, 1.0), 2)
-    random_DBS_diversity_rate = round(random.uniform(0.3, 1.0), 2)
-    random_beam_drop_rate = round(random.uniform(0.0, 0.5), 2)
-    random_simipen_switch = random.randint(1,3)
+  if reset or not randomise:
+    seed_text = str(st.text_area('Input some text here and we will generate a synopsis from this!\n\n(NOTE: Please press "Ctrl Enter" on PC or "Next" on Phone before adjusting the hyperparameters below to avoid losing your test.)'))
+    num_gen_words = int(st.slider('Choose the Number of Generated Words You Would Like', 20, 60, value=40))
+    temperature = float(st.slider('Choose the Temperature You Would Like (The higher the temperature, the more random the generated words. We recommend 1.5.)', 0.3, 2.0, value=1.5))
+    nucleus_threshold = float(st.slider('Choose the Nucleus Threshold You Would Like (Higher values allow more randomness by considering a larger set of probable next words. We recommend 0.9.)', 0.5, 1.0, value=0.9))
+    DBS_diversity_rate = float(st.slider('Choose the Diversity Rate You Would Like (Higher values promote diversity by penalizing similar sequences. We recommend 0.7.)', 0.3, 1.0, value=0.7))
+    beam_drop_rate = float(st.slider('Choose the Beam Drop Rate You Would Like (Introduces randomness by randomly dropping beams to increase diversity)', 0.0, 0.5))
+    simipen_switch = st.selectbox('Select the Similarity Penalty You Would Like to Apply (Jaccard - reduces word overlap), Levenshtein - reduces similar edits, None - no penalty. We recommend Jaccard.)',
+                                  ('jaccard', None, 'levenshtein'))
+    DBS_switch = st.toggle('Activate Diverse Beam Search (Promotes generating varied sequences by penalizing similar beams. We recommend keeping it off until you are more familiar with the app.)')
+    DBW_switch = st.toggle('Activate Dynamic Beam Width (Automatically adjusts beam width based on prediction confidence to balance quality and diversity. We recommend keeping it off until you are more familiar with the app.)')
+    if DBW_switch:
+      beam_width = int(st.slider('Choose the Number of Beams You Would Like (More beams means more possibilities, but also longer generation time. We recommend 5.)', 3, 8))
+    else:
+      beam_width = 3
+  elif randomise:
+    seed_text = str(st.text_area('Input some text here and we will generate a synopsis from this!\n\n(NOTE: Please press "Ctrl Enter" on PC or "Next" on Phone before adjusting the hyperparameters below to avoid losing your test.)'))
+    num_gen_words = int(st.slider('Choose the Number of Generated Words You Would Like', 20, 60, value=random.randint(20,60)))
+    temperature = float(st.slider('Choose the Temperature You Would Like (The higher the temperature, the more random the generated words. We recommend 1.5.)', 0.3, 2.0, value=round(random.uniform(0.3, 2.0), 2)))
+    nucleus_threshold = float(st.slider('Choose the Nucleus Threshold You Would Like (Higher values allow more randomness by considering a larger set of probable next words. We recommend 0.9.)', 0.5, 1.0, value=round(random.uniform(0.5, 1.0), 2)))
+    DBS_diversity_rate = float(st.slider('Choose the Diversity Rate You Would Like (Higher values promote diversity by penalizing similar sequences. We recommend 0.7.)', 0.3, 1.0, value=round(random.uniform(0.3, 1.0), 2)))
+    beam_drop_rate = float(st.slider('Choose the Beam Drop Rate You Would Like (Introduces randomness by randomly dropping beams to increase diversity)', 0.0, 0.5, value=round(random.uniform(0.0, 0.5), 2)))
+    simipen_switch = st.selectbox('Select the Similarity Penalty You Would Like to Apply (Jaccard - reduces word overlap), Levenshtein - reduces similar edits, None - no penalty. We recommend Jaccard.)',
+                                  ('jaccard', None, 'levenshtein'), index=random.randint(0,2))
     random_DBS_switch = random.randint(0,1)
     random_DBW_switch = random.randint(0,1)
-
-    #Equate Widgets to Randomised Values
-    num_gen_words = random_num_gen_words
-    temperature = round(random.uniform(0.3, 2.0), 2)
-    nucleus_threshold = round(random.uniform(0.5, 1.0), 2)
-    DBS_diversity_rate = round(random.uniform(0.3, 1.0), 2)
-    beam_drop_rate = round(random.uniform(0.0, 0.5), 2)
-
-    #Equate Simipen Switch to Randomised Values
-    if random_simipen_switch == 1:
-      simipen_switch = 'jaccard'
-    elif random_simipen_switch == 2:
-      simipen_switch = None
-    elif random_simipen_switch == 3:
-      simipen_switch = 'levenshtein'
-
-    #Equate DBS Switch to Randomised Values
-    if random_DBS_switch == 0:
-      DBS_switch = False
-    elif random_DBS_switch == 1:
-      DBS_switch = True
-
-    #Equate DBW Switch to Randomised Values
-    if random_DBW_switch == 0:
-      DBW_switch = False
+    DBS_switch = st.toggle('Activate Diverse Beam Search (Promotes generating varied sequences by penalizing similar beams. We recommend keeping it off until you are more familiar with the app.)', value=random.choice([True, False]))
+    DBW_switch = st.toggle('Activate Dynamic Beam Width (Automatically adjusts beam width based on prediction confidence to balance quality and diversity. We recommend keeping it off until you are more familiar with the app.)', value=random.choice([True, False]))
+    if DBW_switch:
+      beam_width = int(st.slider('Choose the Number of Beams You Would Like (More beams means more possibilities, but also longer generation time. We recommend 5.)', 3, 8, value=random.randint(3,8)))
+    else:
       beam_width = 3
-    elif random_DBW_switch == 1:
-      DBW_switch = True
-      random_beam_width = random.randint(3,8)
-      beam_width = random_beam_width
+    randomise = None
+  
+  if st.button('Randomise', help='Click me to Randomise Hyperparameter Values!'):
+    randomise=True
 
   if st.button('Reset', help='Reset to Recommended Hyperparameter Values!'):
-    num_gen_words = 40
-    temperature = 1.5
-    nucleus_threshold = 0.9
-    DBS_diversity_rate = 0.7
-    beam_drop_rate = 0.0
-    simipen_switch = 'jaccard'
+    reset=True
 
   st.write(seed_text, num_gen_words, temperature, nucleus_threshold, DBS_diversity_rate, beam_drop_rate, simipen_switch, DBS_switch, DBW_switch, beam_width)
 
