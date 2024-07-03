@@ -118,10 +118,28 @@ if user_name:
   datetime_entered = datetime.now(converted_timezone)
   formatted_datetime = datetime_entered.strftime(datetime_format)
 
-  randomise = False
-  reset = False
+  # Define the state variables
+  if 'randomise' not in st.session_state:
+      st.session_state.randomise = False
+  if 'reset' not in st.session_state:
+      st.session_state.reset = False
+  
+  # Function to randomize hyperparameter values
+  def randomize_hyperparameters():
+      st.session_state.randomise = True
+      st.session_state.reset = False
+  
+  # Function to reset hyperparameter values to default
+  def reset_hyperparameters():
+      st.session_state.randomise = False
+      st.session_state.reset = True
+  
+  # Buttons to randomize or reset hyperparameters
+  st.button('Randomise', help='Click me to Randomise Hyperparameter Values!', on_click=randomize_hyperparameters)
+  st.button('Reset', help='Reset to Recommended Hyperparameter Values!', on_click=reset_hyperparameters)
+
   # User Input Seed Text, Temperature, Num_Gen_Words...
-  if reset or not randomise:
+  if st.session_state.reset or not st.session_state.randomise:
     seed_text = str(st.text_area('Input some text here and we will generate a synopsis from this!\n\n(NOTE: Please press "Ctrl Enter" on PC or "Next" on Phone before adjusting the hyperparameters below to avoid losing your test.)'))
     num_gen_words = int(st.slider('Choose the Number of Generated Words You Would Like', 20, 60, value=40))
     temperature = float(st.slider('Choose the Temperature You Would Like (The higher the temperature, the more random the generated words. We recommend 1.5.)', 0.3, 2.0, value=1.5))
@@ -136,7 +154,7 @@ if user_name:
       beam_width = int(st.slider('Choose the Number of Beams You Would Like (More beams means more possibilities, but also longer generation time. We recommend 5.)', 3, 8))
     else:
       beam_width = 3
-  elif randomise:
+  elif st.session_state.randomise:
     seed_text = str(st.text_area('Input some text here and we will generate a synopsis from this!\n\n(NOTE: Please press "Ctrl Enter" on PC or "Next" on Phone before adjusting the hyperparameters below to avoid losing your test.)'))
     num_gen_words = int(st.slider('Choose the Number of Generated Words You Would Like', 20, 60, value=random.randint(20,60)))
     temperature = float(st.slider('Choose the Temperature You Would Like (The higher the temperature, the more random the generated words. We recommend 1.5.)', 0.3, 2.0, value=round(random.uniform(0.3, 2.0), 2)))
@@ -153,13 +171,10 @@ if user_name:
       beam_width = int(st.slider('Choose the Number of Beams You Would Like (More beams means more possibilities, but also longer generation time. We recommend 5.)', 3, 8, value=random.randint(3,8)))
     else:
       beam_width = 3
-    randomise = None
   
-  if st.button('Randomise', help='Click me to Randomise Hyperparameter Values!'):
-    randomise=True
-
-  if st.button('Reset', help='Reset to Recommended Hyperparameter Values!'):
-    reset=True
+  # Reset the state variables after setting the hyperparameters
+  st.session_state.randomise = False
+  st.session_state.reset = False
 
   st.write(seed_text, num_gen_words, temperature, nucleus_threshold, DBS_diversity_rate, beam_drop_rate, simipen_switch, DBS_switch, DBW_switch, beam_width)
 
