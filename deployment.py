@@ -15,7 +15,7 @@ from streamlit_gsheets import GSheetsConnection
 import streamlit_analytics
 from streamlit.runtime import get_instance
 from streamlit.runtime.scriptrunner import get_script_run_ctx
-from streamlit.runtime.scriptrunner.script_run_context import get_script_run_ctx
+# from streamlit.runtime.scriptrunner.script_run_context import get_script_run_ctx
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
